@@ -15,7 +15,10 @@ if __name__ == "__main__":
 
 	cur_writer = csv.writer(fh, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-	for i in range(1000,51000,1000):
-		for j in range(100,5100,100):
+	N_GWAS_max = int(sys.argv[2])
+	N_Rep_max = int(sys.argv[3])
+	lambda_max = int(sys.argv[4])
+	for i in range(1000,N_GWAS_max+1000,1000):
+		for j in range(100,N_Rep_max+100,100):
 			for k in frange(0.01,0.06,0.01):
 				cur_writer.writerow([i]+[j]+[k]+[100000,1])
