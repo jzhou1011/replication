@@ -25,7 +25,7 @@ for(i in 1:nrow(Data)){
   pr_btp <- pr_tpg*pr_tpr
   #case 3: GWAS true positive but Rep false negative
   #pr_tpfn = pr_tpg-prbtp
-  output <- rbind(output,c(N_GWAS,N_Rep,lambda,pr_fng,pr_btp))
+  output <- rbind(output,c(N_GWAS,N_Rep,lambda,pr_tpg,pr_btp))
 }
 write.table(output,outfile, row.names=FALSE, col.names=FALSE, quote=FALSE)
 #N_Rep = as.numeric(args[2])
