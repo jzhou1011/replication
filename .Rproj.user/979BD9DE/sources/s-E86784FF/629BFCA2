@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1530570911958.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "629BFCA2",
+    "lastKnownWriteTime" : 1428629943,
+    "last_content_update" : 1428629943,
+    "path" : "~/Downloads/r/day2.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "143,7",
+        "scrollLine" : "137"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

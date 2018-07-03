@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1530570320599.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "38FE071B",
+    "lastKnownWriteTime" : 1530578088,
+    "last_content_update" : 1530578088951,
+    "path" : "~/Documents/project_temp/simulator/prob.R",
+    "project_path" : "prob.R",
+    "properties" : {
+        "cursorPosition" : "28,1",
+        "scrollLine" : "21",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
