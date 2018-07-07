@@ -1,14 +1,16 @@
 
 #pulling lamda from normal distrubtion 
-tempSd<-sqrt(0.5)
-lamda <- rnorm(n=10000, mean=0, sd=tempSd)
+tempSd<-sqrt(1)
+N=10000
+sampleSize=10000
+lamda <- rnorm(n=N, mean=0, sd=tempSd/sqrt(sampleSize))
 
 #results<-data.frame(nrow(10000),ncol(3))
 results<-matrix(nrow=10000, ncol=3)
 
 for(i in 1:10000){
   results[i,1] = lamda[i]
-  results[i,c(2,3)] <- rnorm(n=2,mean=lamda[i],sd=1)
+  results[i,c(2,3)] <- rnorm(n=2,mean=lamda[i]*sqrt(sampleSize),sd=1)
 }
 
 results.data=as.data.frame(results)

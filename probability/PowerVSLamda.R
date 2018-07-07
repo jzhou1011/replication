@@ -17,7 +17,7 @@ powerSquared <- function(lamda){
   power(lamda)*power(lamda)
   }
 
-plot<-ggplot(data.frame(x=c(0,0.05)), aes(x=x))+xlab("Lamda")+ylab("Probability")+
+plot<-ggplot(data.frame(x=c(0,0.11)), aes(x=x))+xlab("Lamda")+ylab("Probability")+
     stat_function(fun=powerSquared, geom="line", aes(colour="GWAS=1, Rep=1"))+
     stat_function(fun=power, geom="line", aes(colour="The Power"))+scale_colour_manual(values=c("blue", "red"))+
     ggtitle("                  Probability of the power and two true positives")
