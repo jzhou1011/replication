@@ -1,8 +1,5 @@
 
-#this will show us that doing the two different steps (picking a random lamda and then putting into another nromal
-#r is the same thing as pulling from the conjugate prior formula... 
 #pulling lamda from normal distrubtion 
-
 tempSd<-sqrt(1)
 N=10000
 sampleSize=10000
