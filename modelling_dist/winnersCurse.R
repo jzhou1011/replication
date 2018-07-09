@@ -22,7 +22,6 @@ for(i in 1:N){
   results[i,c(2,3)] <- rnorm(n=2,mean=lamda[i],sd=1)
 }
 
-
 results.data=as.data.frame(results)
 colnames(results.data)=c("lamda", "s1", "s2")
 
@@ -31,15 +30,14 @@ true_lambda <- function(lambda){
 }
 
 #plot(results.data[,c(1,2)])
-s1VSlamda<-ggplot(data = results.data, mapping = aes(x = lamda, y = s1,colour="red")) +geom_point()
-s1VSlamda <- s1VSlamda + stat_function(fun=true_lambda,geom="line",colour="blue")
+s1VSlamda<-ggplot(data = results.data, mapping = aes(x = lamda, y = s1,colour="red")) +geom_point()+scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+ stat_function(fun=true_lambda,geom="line",colour="blue")
 ggsave(filename="s1_VS_lambda.jpg")
 
 #den_lambda = density(filter(results.data,s1>5.2 | s1<(-5.2) && lamda>0)$s1)
 #den_lambda = density(filter(results.data,s1>5.2 | s1<(-5.2))$lamda)
 #plot(den_lambda)
 
-sig_stats<-ggplot(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x = lamda, y = s1)) +geom_point()
+sig_stats<-ggplot(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x = lamda, y = s1)) +geom_point()+scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
 ggsave(filename="lambda_significant_stats.jpg")
 
 #significant lambda values with smaller test stats
@@ -61,5 +59,3 @@ for (i in 1:N){
     cont_table[1,1] <- cont_table[1,1]+1
   }
 }
-
-
