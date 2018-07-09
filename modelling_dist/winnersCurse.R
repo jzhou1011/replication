@@ -1,5 +1,7 @@
 library(tidyverse)
 
+#here we are plotting are plotting the test statistic against the lamda that generated it. 
+#here we can see that the.... NEED TO UNDERSTAND THE DIFFERENT LINES/SD/mean
 
 #pulling lamda from normal distrubtion 
 tempSd<-sqrt(3)
@@ -37,6 +39,9 @@ ggsave(filename="s1_VS_lambda.jpg")
 
 sig_stats<-ggplot(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x = lamda, y = s1)) +geom_point()
 ggsave(filename="lambda_significant_stats.jpg")
+
+#contingency table comparing two test statistics generated from the same lambda 
+#here we can see the replication probelm 
 #s1 is the colums 
 #s2 is the rows
 cont_table = matrix(c(0,0,0,0),nrow=2,ncol=2)
