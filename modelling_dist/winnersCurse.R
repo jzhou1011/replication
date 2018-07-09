@@ -1,5 +1,9 @@
 library(tidyverse)
 
+#here we are plotting are plotting the test statistic against the lamda that generated it.
+#Our test statsitic is ditbruted normally with mean lamda and therefore the test statistic and the values of lambda
+#should not differ very much. only the variance should make a difference. We want to see how closely they match 
+
 
 #pulling lamda from normal distrubtion 
 tempSd<-sqrt(2)
@@ -7,8 +11,9 @@ N=10000
 sampleSize=10000
 lamda <- rnorm(n=N, mean=0, sd=tempSd)
 
-den_init_lambda <- density(lamda)
-plot(den_init_lambda)
+#to check if the lamda drawn is normally ditrbuted 
+#den_init_lambda <- density(lamda)
+#plot(den_init_lambda)
 
 results<-matrix(nrow=N, ncol=3)
 
