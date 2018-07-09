@@ -12,8 +12,8 @@ sampleSize=10000
 lamda <- rnorm(n=N, mean=0, sd=tempSd)
 
 #to check if the lamda drawn is normally ditrbuted 
-#den_init_lambda <- density(lamda)
-#plot(den_init_lambda)
+den_init_lambda <- density(lamda)
+plot(den_init_lambda)
 
 results<-matrix(nrow=N, ncol=3)
 
@@ -41,6 +41,10 @@ ggsave(filename="s1_VS_lambda.jpg")
 
 sig_stats<-ggplot(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x = lamda, y = s1)) +geom_point()
 ggsave(filename="lambda_significant_stats.jpg")
+
+#significant lambda values with smaller test stats
+#sig_lambda <- ggplot(data = filter(results.data, lamda>5.2 | lamda<(-5.2)), mapping = aes(x = lamda, y = s1)) +geom_point()
+
 #s1 is the colums 
 #s2 is the rows
 cont_table = matrix(c(0,0,0,0),nrow=2,ncol=2)
