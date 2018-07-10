@@ -62,14 +62,14 @@ ggsave(filename="s1_s2_sampling.jpg")
 
 #now we will plot the multivaribale disturbtion with lamda and s1
 cov_matrix2=matrix(data=NA, nrow=2, ncol=2)
-cov_matrix[1,1]=2
-cov_matrix[1,2]=2
-cov_matrix[2,1]=2
-cov_matrix[2,2]=3
+cov_matrix2[1,1]=2
+cov_matrix2[1,2]=2
+cov_matrix2[2,1]=2
+cov_matrix2[2,2]=3
 
 mean_matrix2=matrix(data=NA, nrow=2, ncol=1)
-mean_matrix[1,1]=0
-mean_matrix[2,1]=0
+mean_matrix2[1,1]=0
+mean_matrix2[2,1]=0
 
 s1_lamda_distribution<-mvrnorm(n=10000, mu=mean_matrix2, Sigma = cov_matrix2)
 dis_frame2=as.data.frame(s1_lamda_distribution)
@@ -78,5 +78,19 @@ colnames(dis_frame2)=c("lamda", "s1")
 mvnrom_plot_ss<-ggplot(data=dis_frame2, mapping = aes(x=lamda, y=s1))+geom_point()+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
 ggsave(filename="s1_lamda_mvnrom.jpg")
+
+
+#predictions 
+#bivirate probabilities / condtional 
+var_g=2
+sd_g_lamda=sqrt(var_g)
+sd_g_s=sqrt(1+var_g)
+s1=5.2
+cor_lam_S=(var_g)/(sd_g_lamda*sd_g_s)
+
+lamda_pred<-rnorm(n=1, mean=(var_g*s1)/(1+var_g), sd=sqrt(var_g/(1+var_g)))
+#tempMean=(sd_g_lamda/sd_g_s)*(cor_lam_S*s1)
+
+s2_pred<-rnorm(n=1, mean=(var_g*s1)/(1+var_g), sd=sqrt((1+var_g)^2-(var_g)^2)/(1+var_g))
 
 
