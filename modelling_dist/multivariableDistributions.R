@@ -4,6 +4,8 @@ library(tidyverse)
 library(MASS)
 library(ggplot2)
 library(dplyr)
+library(plyr)
+library(reshape2)
 
 #pulling lamda from normal distrubtion 
 tempSd<-sqrt(2)
@@ -21,6 +23,8 @@ for(i in 1:N){
 results.data=as.data.frame(results)
 colnames(results.data)=c("lamda", "s1", "s2")
 
+#here we are showing winnes curse. and that two studies are likely not to replicate given s1 was a true positve 
+#s2 just doesn't look as good after conditioning on s1 being sigifnicant becuase of the var=1, enviorenmental effect
 s1VSs2_4<-ggplot(data = filter(results.data, s1>4 | s1<(-4)), mapping = aes(x = s1, y = s2)) +
   geom_point()+geom_hline(yintercept=4, linetype="dashed", color = "red")+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+
@@ -28,12 +32,13 @@ s1VSs2_4<-ggplot(data = filter(results.data, s1>4 | s1<(-4)), mapping = aes(x = 
   
 ggsave(filename="s1_s2_replication_4.jpg")
 
+#modelling distrbutions
 
 #covariance between s1 and s2 
 s1s2_cov<-cov(results.data$s1, y = results.data$s2, use = "everything", method = "pearson")
 #the covariance is equal to sigmasqauredg which is variance of lamda
 
-#now we will plot the multivaribale disturbtion with s1 and s2
+#now we will plot the multivaribale disturbtion with s1 and s2 assuming known variance and covariances
 #covariance matrix 
 #[vs1, cs2s2]
 #[cs2s2, vs2]
@@ -54,6 +59,7 @@ mvnrom_plot_ss<-ggplot(data=dis_frame, mapping = aes(x=s1, y=s2))+geom_point()+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
 ggsave(filename="s1_s2_mvnrom.jpg")
 
+#plotting s1 vs s2 by sampling and not assuming a distrubtion 
 s1VSs2<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
   geom_point()+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
@@ -88,8 +94,12 @@ sd_g_s=sqrt(1+var_g)
 s1=5.2
 cor_lam_S=(var_g)/(sd_g_lamda*sd_g_s)
 
-lamda_pred<-rnorm(n=1, mean=(var_g*s1)/(1+var_g), sd=sqrt(var_g/(1+var_g)))
+#correction for winners curse
+lamda_pred<-rnorm(n=1000, mean=(var_g*s1)/(1+var_g), sd=sqrt(var_g/(1+var_g)))
 #tempMean=(sd_g_lamda/sd_g_s)*(cor_lam_S*s1)
+#real mean? 
+#mean(subset(results.data, s1>5.2)$lamda)
+#mean(results.data$lamda[results.data$s1>5.2])
 
 s2_pred<-rnorm(n=1, mean=(var_g*s1)/(1+var_g), sd=sqrt((1+var_g)^2-(var_g)^2)/(1+var_g))
 
