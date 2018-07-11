@@ -29,7 +29,7 @@ compute_mean <- function(s1){
   sigma^2*s1/(1+sigma^2)
 }
 
-results.data$pred_lambda <- computeMean(results.data$s1)
+results.data$pred_lambda <- compute_mean(results.data$s1)
 
 s1_val <- results.data[c("lamda","s1")]
 s1_val$grouping = rep("s1",10000)
