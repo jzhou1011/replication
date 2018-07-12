@@ -40,10 +40,14 @@ calculate_pcondtional<-function(s1){
 }
 
 calculate_pstudy1<-function(s1){
-  pnorm(s1,0,sqrt(1+sigma^2))
+  dnorm(s1,0,sqrt(1+sigma^2))
 }
 
+integrand <- function(s1){
+  calculate_pcondtional(s1)*calculate_pstudy1(s1)
+}
 
+integrate(calculate_pcondtional, lower=5.2, upper=Inf)
 #actual results of simulation 
 # number of s1 greater than 5.2 
 s1_sig<-nrow(filter(results.data, s1>5.2))
