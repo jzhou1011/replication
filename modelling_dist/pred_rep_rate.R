@@ -31,7 +31,7 @@ colnames(results.data)=c("lamda", "s1", "s2")
 calculate_pcondtional<-function(s1){
   mean<-(sigma^2*s1)/(1+sigma^2)
   var=1+((sigma^2)/(1+sigma^2))
-  p<- (1-pnorm(5.2, mean, sqrt(var)))
+  p<- (1-pnorm(5.2, mean, sqrt(var)))+pnorm(-5.2, mean, sqrt(var))
   return(p)
 }
 
@@ -43,14 +43,29 @@ integrand <- function(s1){
   calculate_pcondtional(s1)*calculate_pstudy1(s1)
 }
 
-theo_rep <-integrate(integrand, lower=5.2, upper=Inf)
+theo_rep <-integrate(integrand, lower=5.2, upper=Inf)$value
+theo_rep <- theo_rep + integrate(integrand, lower=(-Inf), upper=(-5.2))$value
 #actual results of simulation 
 # number of s1 greater than 5.2
-s1_sig<-nrow(filter(results.data, s1>5.2))
-s2_sig_givens1<-nrow(filter(filter(results.data, s1>5.2), s2>5.2))
+s1_sig<-nrow(filter(results.data, s1>5.2|s1<(-5.2)))
+s2_sig_givens1<-nrow(filter(filter(results.data, s1>5.2), s2>5.2)) + nrow(filter(filter(results.data, s1<(-5.2)), s2<(-5.2)))
 repRate=s2_sig_givens1/s1_sig
 
-s1_sig_vector <-filter(results.data, s1>5.2)$s1
+s1_sig_vector <-filter(results.data, s1>5.2|s1<(-5.2))$s1
 theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector))/N
 
+
+#plotting probabilities 
+probabilties_conditional<-ggplot(data=filter(results.data, s1>0 & s1<100), mapping = aes(x=s1))+
+  stat_function(fun=calculate_pcondtional)
+
+#plotting means
+mean<-function(s1){
+  (sigma^2*s1)/(1+sigma^2)
+}
+
+means_conditional<-ggplot(data=filter(results.data, s1>5.2 & s1<6), mapping = aes(x=s1))+
+  stat_function(fun=mean)
+
+means_conditional
 
