@@ -72,41 +72,10 @@ table4$Ps2<-calculate_pcondtional(table4$S1, N_1, table4$N2[1])
 
 
 
-
-
-calculate_pstudy1<-function(s1){
-  dnorm(s1,0,sqrt(1+sigma^2))
-}
-
-integrand <- function(s1){
-  calculate_pcondtional(s1)*calculate_pstudy1(s1)
-}
-
-#predicting using our formula 
-theo_rep <-integrate(integrand, lower=5.2, upper=Inf)$value
-theo_rep <- theo_rep + integrate(integrand, lower=(-Inf), upper=(-5.2))$value
-
-#actual results of simulation 
-# number of s1 greater than 5.2
-s1_sig<-nrow(filter(results.data, s1>5.2|s1<(-5.2)))
-s2_sig_givens1<-nrow(filter(filter(results.data, s1>5.2), s2>5.2)) + nrow(filter(filter(results.data, s1<(-5.2)), s2<(-5.2)))
-repRate=s2_sig_givens1/s1_sig
-
-s1_sig_vector <-filter(results.data, s1>5.2|s1<(-5.2))$s1
-theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector))/N
-
-
 #plotting probabilities 
-probabilties_conditional<-ggplot(data=filter(results.data, s1>0 & s1<100), mapping = aes(x=s1))+
-  stat_function(fun=calculate_pcondtional)
+probabilties_conditional<-ggplot(data=filter(table2, S1>0 & S1<100), mapping = aes(x=S1))+
+  stat_function(fun=calculate_pcondtional, args=list(sampleS1=N_1, sampleS2=N_1))
 
-#plotting means
-mean<-function(s1){
-  (sigma^2*s1)/(1+sigma^2)
-}
-
-means_conditional<-ggplot(data=filter(results.data, s1>5.2 & s1<6), mapping = aes(x=s1))+
-  stat_function(fun=mean)
-
-means_conditional
+probabilties_conditional<-ggplot(data=filter(table3, S1>0 & S1<100), mapping = aes(x=S1))+
+  stat_function(fun=calculate_pcondtional, args=list(sampleS1=N_1, sampleS2=N_1*2))
 
