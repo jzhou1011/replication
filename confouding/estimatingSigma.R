@@ -34,6 +34,7 @@ compute_var(results.data$s1, mean(results.data$s1))
 
 #Large degrree of freedom 
 var<-compute_var(results.data$s1, mean(results.data$s1))
+pred_sig_sq <- var-1
 
 rnorm(var,sqrt(2*var()))
 criticalValue=1.959964
@@ -50,9 +51,12 @@ compute_confidence<-function(var){
 
 compute_confidence(compute_var(results.data$s1, mean(results.data$s1)))
 
-
 #now using s1 and s2 to estimate 
 #distribution of the average (s1+s2)/2
 
+var_avg <- 0.25*compute_var(results.data$s1, mean(results.data$s1))+
+                 0.25*compute_var(results.data$s2, mean(results.data$s2))+
+                  0.5*cov(results.data$s1,results.data$s2)
+pred_sig_sq2<-var_avg-0.5
 
 
