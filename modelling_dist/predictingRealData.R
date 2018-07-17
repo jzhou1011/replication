@@ -2,7 +2,6 @@
 
 
 #reading in libraries
-
 library(tidyverse)
 library(MASS)
 library(ggplot2)
@@ -32,22 +31,24 @@ sampleSizeS1=data$n.disc
 sampleSizeS2=data$n.rep
 
 
-#calculating condtional with different sample sizes. 
+#calculating condtional with different sample sizes.
 #this one is assuming same sample size
 # calculate_pcondtional<-function(s1){
 #   mean<-(sigma^2*s1)/(1+sigma^2)
-#   var=1+((sigma^2)/(1+sigma^2))
-#   p<- (1-pnorm(zScore, mean, sqrt(var)))+pnorm(-zScore, mean, sqrt(var))
+#   var2=1+((sigma^2)/(1+sigma^2))
+#   p<- (1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
 #   return(p)
 # }
 
+#probability of s2 replicating given s1
 calculate_pcondtional<-function(s1,sampleS1, sampleS2){
-  mean<-((sigma^2*s1)/(1+sigma^2))*(sqrt(sampleS1/sampleS2))
-  var=(1+((sigma^2)/(1+sigma^2)))*(sampleS1)^2
-  p<- (1-pnorm(zScore, mean, sqrt(var)))+pnorm(-zScore, mean, sqrt(var))
+  sd_S1<-sqrt(sampleS1*sigma^2+1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1)
+  mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S2^2)
+  var2<-1+((sampleS1*sigma^2)/(sd_S2)^2)
+  p<- (1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
   return(p)
 }
-
 
 
 #observed replication rate 
@@ -56,6 +57,6 @@ s2_sig_givens1<-nrow(filter(filter(results.data, s1>zScore), s2>zScore)) + nrow(
 repRate=s2_sig_givens1/s1_sig
 
 s1_sig_vector <-filter(results.data, s1>zScore|s1<(-zScore))$s1
-theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector, sampleSizeS1, sampleSizeS2))/N
-#theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector))/N
+#theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector, sampleSizeS1, sampleSizeS2))/N
+theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector))/N
 
