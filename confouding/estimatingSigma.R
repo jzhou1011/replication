@@ -17,6 +17,7 @@ results.data=as.data.frame(results)
 colnames(results.data)=c("lamda", "s1", "s2")
 
 #calculating the variance of s1 to estimate sigma squared g 
+#ask why this is different than R's 
 compute_var<-function(s1_v,mean){
   sum<-0
   for(s1 in s1_v){
@@ -26,7 +27,7 @@ compute_var<-function(s1_v,mean){
   return(var)
 }
 
-compute_var(results.data$s1, mean(results.data$s1))
+#compute_var(results.data$s1, mean(results.data$s1))
 
 
 #confidence interval 
@@ -36,7 +37,7 @@ compute_var(results.data$s1, mean(results.data$s1))
 var<-var(results.data$s1)
 pred_sig_sq <- var-1
 
-rnorm(var,sqrt(2*var()))
+rnorm(var,sqrt(2*var))
 criticalValue=1.959964
 chiSquaredUpper<-((criticalValue+sqrt(2*(N-1)-1))^2)/2
 chiSquaredLower<-((-criticalValue+sqrt(2*(N-1)-1))^2)/2
@@ -62,5 +63,9 @@ var_avg <- 0.25*var(results.data$s1)+
   0.25*var(results.data$s2)+
   0.5*cov(results.data$s1,results.data$s2)
 pred_sig_sq2<-var_avg-0.5
+
+#confidence Interval 
+compute_confidence(var_avg)
+
 
 
