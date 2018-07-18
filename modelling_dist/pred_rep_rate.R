@@ -48,8 +48,8 @@ theo_rep <- theo_rep + integrate(integrand, lower=(-Inf), upper=(-5.2))$value
 #actual results of simulation 
 # number of s1 greater than 5.2
 s1_sig<-nrow(filter(results.data, s1>5.2|s1<(-5.2)))
-s2_sig_givens1<-nrow(filter(filter(results.data, s1>5.2), s2>5.2)) + nrow(filter(filter(results.data, s1<(-5.2)), s2<(-5.2)))
-repRate=s2_sig_givens1/s1_sig
+s2_s1_sig<-nrow(filter(filter(results.data, s1>5.2), s2>5.2)) + nrow(filter(filter(results.data, s1<(-5.2)), s2<(-5.2)))
+repRate=s2_s1_sig/N
 
 s1_sig_vector <-filter(results.data, s1>5.2|s1<(-5.2))$s1
 theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector))/N
