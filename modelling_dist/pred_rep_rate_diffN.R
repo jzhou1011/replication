@@ -9,7 +9,7 @@ library(reshape2)
 
 #simulating data 
 sigma<-sqrt(.002)
-N=50
+N=100000
 N_1=10000
 zScore=5.2
 
@@ -92,4 +92,32 @@ probabilties_conditional<-ggplot(data=filter(table2, S1>0 & S1<100), mapping = a
 
 probabilties_conditional<-ggplot(data=filter(table3, S1>0 & S1<100), mapping = aes(x=S1))+
   stat_function(fun=calculate_pcondtional, args=list(sampleS1=N_1, sampleS2=N_1*2))
+
+
+#actual replication rate table1
+table1$S2<-s2_dist1<-rnorm(n=N, mean=0, sd=sqrt(sigma^2*N_1*0.5+1))
+s1_sig<-nrow(filter(table1, S1>5.2|S1<(-5.2)))
+s2_sig_givens1<-nrow(filter(filter(table1, S1>5.2), S2>5.2)) + nrow(filter(filter(table1, S1<(-5.2)), S2<(-5.2)))
+repRate=s2_sig_givens1/s1_sig
+
+  
+#theoretical 
+s1_sig_vector <-filter(table1, S1>5.2|S1<(-5.2))$S1
+theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleS1 = N_1, sampleS2 = N_1*0.5))/N
+
+
+
+#actual replication rate table2
+table2$S2<-s2_dist1<-rnorm(n=N, mean=0, sd=sqrt(sigma^2*N_1+1))
+s1_sig<-nrow(filter(table2, S1>5.2|S1<(-5.2)))
+s2_sig_givens1<-nrow(filter(filter(table2, S1>5.2), S2>5.2)) + nrow(filter(filter(table2, S1<(-5.2)), S2<(-5.2)))
+repRate=s2_sig_givens1/s1_sig
+
+
+#theoretical 
+s1_sig_vector <-filter(table2, S1>5.2|S1<(-5.2))$S1
+theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleS1 = N_1, sampleS2 = N_1))/N
+
+
+
 
