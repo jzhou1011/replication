@@ -11,13 +11,13 @@ library(reshape2)
 
 
 #read in file 
-fileName<-"22021425_data_upbuilt_filtered_upbuilt.csv"
+fileName<-"24952745_data_upbuilt_filtered_upbuilt.csv"
 data<-read.csv(fileName, sep=" ")
 
 #find test statsitic 
 results.data<-data.frame(data$beta.disc, data$se.disc)
-results.data$s1<-(data$beta.disc-data$trait.mean)/(data$se.disc)
-results.data$s2<-(data$beta.rep-data$trait.mean)/(data$se.rep)
+results.data$s1<-(data$beta.disc)/(data$se.disc)
+results.data$s2<-(data$beta.rep)/(data$se.rep)
 
 
 #needed functions and math
@@ -46,14 +46,15 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   sd_S2<-sqrt(sampleS2*sigma^2+1)
   mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S1^2)
   var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
-  p<- (1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
+  p<-(1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
   return(p)
 }
+
 
 #observed replication rate 
 s1_sig<-nrow(filter(results.data, s1>zScore|s1<(-zScore)))
 s2_sig_givens1<-nrow(filter(filter(results.data, s1>zScore), s2>zScore)) + nrow(filter(filter(results.data, s1<(-zScore)), s2<(-zScore)))
-repRate=s2_sig_givens1/s1_sig
+repRate=s2_sig_givens1/nrow(results.data)
 
 s1_sig_vector <-filter(results.data, s1>zScore|s1<(-zScore))$s1
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector, sampleSizeS1, sampleSizeS2))/N
