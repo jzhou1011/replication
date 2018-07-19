@@ -61,6 +61,16 @@ s1_sig_vector <-filter(data, s1>5.2|s1<(-5.2))$s1
 theo_rep <- sum(calculate_pcondtional(s1_sig_vector))/M
 
 #visualization
+func<-function(s1, c1, c2, g){
+  mean<-(g*s1)/(1+g+c1)
+  var<-(1-(g^2)/((1+g+c1)*(1+g+c2)))*(1+g+c2)
+  p<- (1-pnorm(5.2, mean, sqrt(var)))+pnorm(-5.2, mean, sqrt(var))
+  return(p)
+}
+
+ggplot(data=data, mapping=aes(x=s1))+stat_function(fun=func, args=list(c1<-0.2, c2<-0, g<-1.8), aes(colour="c1=0.2"))+
+  stat_function(fun=func, args=list(c1<-0.0, c2<-.2, g<-1.8), aes(colour="c2=0.2"))+
+  stat_function(fun=func, args=list(c1<-0, c2<-0, g<-2), aes(colour="c2=c1=0"))
 
 
 
