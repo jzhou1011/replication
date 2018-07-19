@@ -15,6 +15,7 @@ for(i in 1:N){
 
 results.data=as.data.frame(results)
 colnames(results.data)=c("lamda", "s1", "s2")
+results.data$avg<-(results.data$s1+results.data$s2)/2
 
 #calculating the variance of s1 to estimate sigma squared g 
 #ask why this is different than R's 
@@ -46,7 +47,7 @@ chiSquaredLower<-((-criticalValue+sqrt(2*(N-1)-1))^2)/2
 compute_confidence<-function(var){
   upperBound<-((N-1)*var)/chiSquaredLower
   lowerBound<-((N-1)*var)/chiSquaredUpper
-  confidence<-c(lowerBound,upperBound)
+  confidence<-c(lowerBound,upperBound, upperBound-lowerBound)
   return(confidence)
   }
 
@@ -59,13 +60,13 @@ compute_confidence(compute_var(results.data$s1, mean(results.data$s1)))
 # var_avg <- 0.25*compute_var(results.data$s1, mean(results.data$s1))+
 #                  0.25*compute_var(results.data$s2, mean(results.data$s2))+
 #                   0.5*cov(results.data$s1,results.data$s2)
-var_avg <- 0.25*var(results.data$s1)+
-  0.25*var(results.data$s2)+
-  0.5*cov(results.data$s1,results.data$s2)
-pred_sig_sq2<-var_avg-0.5
+# var_avg <- 0.25*var(results.data$s1)+
+#   0.25*var(results.data$s2)+
+#   0.5*cov(results.data$s1,results.data$s2)
+pred_sig_sq2<-var(results.data$avg)-0.5
 
 #confidence Interval 
-compute_confidence(var_avg)
+compute_confidence(var(results.data$avg))
 
 
 

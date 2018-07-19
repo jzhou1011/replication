@@ -10,9 +10,12 @@ library(reshape2)
 
 
 #simulating data 
-sigma_g<-sqrt(1)
-sigma_c1<-sqrt(1) #first study
-sigma_c2<-sqrt(2)
+var_g<-1.8
+var_c1<-0.2
+var_c2<-0.1
+sigma_g<-sqrt(var_g)
+sigma_c1<-sqrt(var_c1) #first study
+sigma_c2<-sqrt(var_c2)
 M<-1000000 #number of snps
 
 #generating lambda
@@ -56,6 +59,9 @@ repRate=s2_s1_sig/M
 #theoretical reprate
 s1_sig_vector <-filter(data, s1>5.2|s1<(-5.2))$s1
 theo_rep <- sum(calculate_pcondtional(s1_sig_vector))/M
+
+#visualization
+
 
 
 
