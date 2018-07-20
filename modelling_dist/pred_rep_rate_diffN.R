@@ -12,15 +12,32 @@ sigma<-sqrt(2)
 N=1000000
 N_1=1
 #N_1=10000
-zScore=5.2
+z_score=5.2
 
 #probability of s2 replicating given s1
+# calculate_pcondtional<-function(s1,sampleS1, sampleS2){
+#   sd_S1<-sqrt(sampleS1*sigma^2+1)
+#   sd_S2<-sqrt(sampleS2*sigma^2+1)
+#   mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S1^2)
+#   var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
+#   p<- (1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
+#   return(p)
+# }
+
 calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   sd_S1<-sqrt(sampleS1*sigma^2+1)
   sd_S2<-sqrt(sampleS2*sigma^2+1)
-  mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S1^2)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
   var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
-  p<- (1-pnorm(zScore, mean, sqrt(var2)))+pnorm(-zScore, mean, sqrt(var2))
+  p <- s1
+  for (i in 1:NROW(s1)){
+    if (s1[i]>0){
+      p[i]<-(1-pnorm(z_score, mean[i], sqrt(var2)))
+    }
+    else{
+      p[i]<-pnorm(-z_score, mean[i], sqrt(var2))
+    }
+  }
   return(p)
 }
 
@@ -51,7 +68,7 @@ table1$Ps2<-calculate_pcondtional(table1$S1, N_1, table1$N2[1])
 table1$S2<-as.vector(s2_dist1)
 s1_sig<-nrow(filter(table1, S1>5.2|S1<(-5.2)))
 s2_s1_sig<-nrow(filter(filter(table1, S1>5.2), S2>5.2)) + nrow(filter(filter(table1, S1<(-5.2)), S2<(-5.2)))
-repRate=s2_sig_givens1/N
+repRate=s2_s1_sig/N
 
 #theoretical 
 s1_sig_vector <-filter(table1, S1>5.2|S1<(-5.2))$S1
