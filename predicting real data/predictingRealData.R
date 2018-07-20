@@ -11,6 +11,8 @@ library(reshape2)
 
 
 #read in file 
+fileName<-"19820697_data_upbuilt_filtered_upbuilt.csv"
+fileName<-"19343178_data_upbuilt_filtered_upbuilt.csv"
 fileName<-"25282103_data_upbuilt_filtered_upbuilt.csv"
 data<-read.csv(fileName, sep=" ")
 
@@ -29,8 +31,8 @@ var=data$trait.var[1]
 sigma=sqrt(var)
 threshold=data$p.thresh[1]
 
-sampleSizeS1=1
-sampleSizeS2=data$n.rep/data$n.disc
+sampleSizeS1=data$n.disc
+sampleSizeS2=data$n.rep
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
@@ -52,7 +54,17 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   sd_S2<-sqrt(sampleS2*sigma^2+1)
   mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S1^2)
   var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
-  p<-(1-pnorm(z_score, mean, sqrt(var2)))+pnorm(-z_score, mean, sqrt(var2))
+  print(NROW(s1))
+  p <- rep(0, NROW(s1))
+  for (i in 1:NROW(s1)){
+    if (s1[i]>0){
+      p[i]<-(1-pnorm(z_score, mean, sqrt(var2)))
+    }
+    else{
+      p[i]<-pnorm(-z_score, mean, sqrt(var2))
+    }
+  }
+  print(p)
   return(p)
 }
 
@@ -69,3 +81,11 @@ obs_rep_cnt <- sum(results.data$actual_rep)
 # theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
+
+
+
+sigma_g_est=(var(results.data$s1+results.data$s2)-var(results.data$s1-results.data$s2))*(1/4)
+var_c1_est=var(results.data$s1)-1-sigma_g_est
+var_c2_est=var(results.data$s2)-1-sigma_g_est
+
+
