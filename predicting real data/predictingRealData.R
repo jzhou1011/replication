@@ -31,8 +31,10 @@ var=data$trait.var[1]
 sigma=sqrt(var)
 threshold=data$p.thresh[1]
 
-sampleSizeS1=data$n.disc
-sampleSizeS2=data$n.rep
+# sampleSizeS1=data$n.disc
+# sampleSizeS2=data$n.rep
+sampleSizeS1=1
+sampleSizeS2=data$n.rep/data$n.disc
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
@@ -52,19 +54,17 @@ for (i in 1:M){
 calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   sd_S1<-sqrt(sampleS1*sigma^2+1)
   sd_S2<-sqrt(sampleS2*sigma^2+1)
-  mean<-(sqrt(sampleS1*sampleS2)*sigma^2*s1)/(sd_S1^2)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
   var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
-  print(NROW(s1))
-  p <- rep(0, NROW(s1))
+  p <- s1
   for (i in 1:NROW(s1)){
     if (s1[i]>0){
-      p[i]<-(1-pnorm(z_score, mean, sqrt(var2)))
+      p[i]<-(1-pnorm(z_score, mean[i], sqrt(var2)))
     }
     else{
-      p[i]<-pnorm(-z_score, mean, sqrt(var2))
+      p[i]<-pnorm(-z_score, mean[i], sqrt(var2))
     }
   }
-  print(p)
   return(p)
 }
 
