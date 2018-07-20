@@ -1,0 +1,3 @@
+beta.disc se.disc n.disc freq.disc beta.rep se.rep n.rep freq.rep trait.mean p.thresh rsid chr pos trait.var file.tag
+-0.143 0.022 4689 0.408 -0.128 0.035 1392 0.37 8 0.00000005 rs12034598 1 207584170 1.08621 22291609_data_upbuilt_filtered.csv
+0.239 0.033 4153 0.12 0.151 0.062 1226 0.12 254 0.00000005 rs3026968 1 159177662 0.942883 22291609_data_upbuilt_filtered.csv
