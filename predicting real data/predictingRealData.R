@@ -12,8 +12,8 @@ library(reshape2)
 
 #read in file 
 fileName<-"19820697_data_upbuilt_filtered_upbuilt.csv"
-fileName<-"19343178_data_upbuilt_filtered_upbuilt.csv"
-fileName<-"25282103_data_upbuilt_filtered_upbuilt.csv"
+#fileName<-"19343178_data_upbuilt_filtered_upbuilt.csv"
+#fileName<-"25282103_data_upbuilt_filtered_upbuilt.csv"
 data<-read.csv(fileName, sep=" ")
 
 #find test statsitic 
@@ -33,8 +33,8 @@ threshold=data$p.thresh[1]
 
 # sampleSizeS1=data$n.disc
 # sampleSizeS2=data$n.rep
-sampleSizeS1=1
-sampleSizeS2=data$n.rep/data$n.disc
+sampleSizeS1=1*sqrt(scalingFactor)
+sampleSizeS2=(data$n.rep/data$n.disc)*sqrt(scalingFactor)
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
@@ -81,11 +81,5 @@ obs_rep_cnt <- sum(results.data$actual_rep)
 # theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
-
-
-
-sigma_g_est=(var(results.data$s1+results.data$s2)-var(results.data$s1-results.data$s2))*(1/4)
-var_c1_est=var(results.data$s1)-1-sigma_g_est
-var_c2_est=var(results.data$s2)-1-sigma_g_est
 
 
