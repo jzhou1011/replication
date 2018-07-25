@@ -16,7 +16,7 @@ library(reshape2)
 #filename<-"25282103_data_upbuilt_filtered_upbuilt.csv" #good 
 #filename<-"19557161_data_upbuilt_filtered_upbuilt.csv" #good 
 #filename<-"20010834_data_upbuilt_filtered_upbuilt.csv" #good #not bad
-filename<-"20887962_data_upbuilt_filtered_upbuilt.csv" #not good 
+#filename<-"20887962_data_upbuilt_filtered_upbuilt.csv" #not good 
 #filename<-"21738478_data_upbuilt_filtered_upbuilt.csv" #good #closer when using ratio 
 #filename<-"21909110_data_upbuilt_filtered_upbuilt.csv" #good ratio and not is the same and its ok
 #filename<-"21947420_data_upbuilt_filtered_upbuilt.csv" #good will be off but shoudl be good? 
@@ -24,7 +24,7 @@ filename<-"20887962_data_upbuilt_filtered_upbuilt.csv" #not good
 #filename<-"22021425_data_upbuilt_filtered_upbuilt.csv" #good ratio is good
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv" #good #very good 
 #filename<-"22504420_data_upbuilt_filtered_upbuilt.csv" #good #not working
-#filename<-"23118974_data_upbuilt_filtered_upbuilt.csv" #mostly not sigfnicant
+filename<-"23118974_data_upbuilt_filtered_upbuilt.csv" #mostly not sigfnicant
 #filename<-"23263486_data_upbuilt_filtered_upbuilt.csv" #kinda good
 #filename<-"23669352_data_upbuilt_filtered_upbuilt.csv" #idk
 #filename<-"23658558_data_upbuilt_filtered_upbuilt.csv" #hm
