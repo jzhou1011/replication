@@ -11,28 +11,36 @@ library(reshape2)
 
 
 #read in file 
-#filename<-"19820697_data_upbuilt_filtered_upbuilt.csv" #not good 
-#filename<-"19343178_data_upbuilt_filtered_upbuilt.csv" #good
+#filename<-"./files/1_19820697_data_upbuilt_filtered_upbuilt.csv" #straight+too few data
+#filename<-"./files/2_19820697_data_upbuilt_filtered_upbuilt.csv" #straight+too few data
+#filename<-"./files/3_19820697_data_upbuilt_filtered_upbuilt.csv" #not enough sig s2
+#filename<-"./files/4_19820697_data_upbuilt_filtered_upbuilt.csv" #average #5 vs 12.96
+#filename<-"./files/5_19820697_data_upbuilt_filtered_upbuilt.csv" #all sig #3 vs 2.997
+#filename<-"./files/1_19343178_data_upbuilt_filtered_upbuilt.csv" #good #6 vs 21.16
+#filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 24.31 
+#filename<-"./files/1_20010834_data_upbuilt_filtered_upbuilt.csv" #okay #6 vs 29.06
+#filename<-"./files/1_20887962_data_upbuilt_filtered_upbuilt.csv" #straight
+#filename<-"./files/1_21738478_data_upbuilt_filtered_upbuilt.csv" #good #13 vs 31.5
+#filename<-"./files/1_21909110_data_upbuilt_filtered_upbuilt.csv" #good but large variance #11 vs 23.78
+#filename<-"./files/2_21909110_data_upbuilt_filtered_upbuilt.csv" #good #23 vs 30.82
+filename<-"./files/1_24952745_data_upbuilt_filtered_upbuilt.csv" #accetable 
+
 #filename<-"25282103_data_upbuilt_filtered_upbuilt.csv" #good 
-#filename<-"19557161_data_upbuilt_filtered_upbuilt.csv" #good 
-#filename<-"20010834_data_upbuilt_filtered_upbuilt.csv" #good #not bad
-#filename<-"20887962_data_upbuilt_filtered_upbuilt.csv" #not good 
-#filename<-"21738478_data_upbuilt_filtered_upbuilt.csv" #good #closer when using ratio 
 #filename<-"21909110_data_upbuilt_filtered_upbuilt.csv" #good ratio and not is the same and its ok
 #filename<-"21947420_data_upbuilt_filtered_upbuilt.csv" #good will be off but shoudl be good? 
 #filename<-"21998595_data_upbuilt_filtered_upbuilt.csv" #good ratio is good 
 #filename<-"22021425_data_upbuilt_filtered_upbuilt.csv" #good ratio is good
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv" #good #very good 
-#filename<-"22504420_data_upbuilt_filtered_upbuilt.csv" #good #not working
-filename<-"23118974_data_upbuilt_filtered_upbuilt.csv" #mostly not sigfnicant
+#filename<-"22504420_data_upbuilt_filtered_upbuilt.csv" #good
+#filename<-"23118974_data_upbuilt_filtered_upbuilt.csv" #mostly not sigfnicant
 #filename<-"23263486_data_upbuilt_filtered_upbuilt.csv" #kinda good
 #filename<-"23669352_data_upbuilt_filtered_upbuilt.csv" #idk
 #filename<-"23658558_data_upbuilt_filtered_upbuilt.csv" #hm
 #filename<-"24430505_data_upbuilt_filtered_upbuilt.csv" #hm idk
-#filename<-"24952745_data_upbuilt_filtered_upbuilt.csv" #accetable 
+
 #filename<-"25035420_data_upbuilt_filtered_upbuilt.csv" #straight
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv"
-data<-read.csv(filename, sep=" ")
+data<-read.csv(filename, sep=",")
 
 #find test statsitic 
 results.data<-data.frame(data$beta.disc, data$se.disc)
@@ -57,8 +65,8 @@ threshold=data$p.thresh[1]
 
 # sampleSizeS1=data$n.disc
 # sampleSizeS2=data$n.rep
-sampleSizeS1=1*scalingFactor
-sampleSizeS2=(mean(data$n.rep)/mean(data$n.disc))*scalingFactor
+sampleSizeS1=mean(data$n.disc)
+sampleSizeS2=mean(data$n.rep)
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
@@ -105,8 +113,6 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
 obs_rep_cnt <- sum(results.data$actual_rep)
 
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector, sampleSizeS1, sampleSizeS2))/N
-# theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
+#theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
-
-
