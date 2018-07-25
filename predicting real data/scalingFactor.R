@@ -8,8 +8,8 @@ library(plyr)
 library(reshape2)
 
 #reading in data
-fileName<-"25282103_data_upbuilt_filtered_upbuilt.csv"
-data<-read.csv(fileName, sep=" ")
+filename<-"25035420_data_upbuilt_filtered_upbuilt.csv"
+data<-read.csv(filename, sep=" ")
 
 
 z_score <- qnorm(0.025,lower.tail =FALSE)
@@ -22,8 +22,8 @@ var=data$trait.var[1]
 sigma=sqrt(var)
 threshold=data$p.thresh[1]
 
-sampleSizeS1=data$n.disc
-sampleSizeS2=data$n.rep
+sampleSizeS1=data$n.disc/data$n.disc
+sampleSizeS2=data$n.rep/data$n.disc
 
 #calculating averages for scaling 
 averages1=mean(data$n.disc)

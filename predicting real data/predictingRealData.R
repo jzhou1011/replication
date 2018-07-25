@@ -11,15 +11,39 @@ library(reshape2)
 
 
 #read in file 
-fileName<-"19820697_data_upbuilt_filtered_upbuilt.csv"
-#fileName<-"19343178_data_upbuilt_filtered_upbuilt.csv"
-#fileName<-"25282103_data_upbuilt_filtered_upbuilt.csv"
-data<-read.csv(fileName, sep=" ")
+#filename<-"19820697_data_upbuilt_filtered_upbuilt.csv" #not good 
+#filename<-"19343178_data_upbuilt_filtered_upbuilt.csv" #good
+#filename<-"25282103_data_upbuilt_filtered_upbuilt.csv" #good 
+#filename<-"19557161_data_upbuilt_filtered_upbuilt.csv" #good 
+#filename<-"20010834_data_upbuilt_filtered_upbuilt.csv" #good #not bad
+filename<-"20887962_data_upbuilt_filtered_upbuilt.csv" #not good 
+#filename<-"21738478_data_upbuilt_filtered_upbuilt.csv" #good #closer when using ratio 
+#filename<-"21909110_data_upbuilt_filtered_upbuilt.csv" #good ratio and not is the same and its ok
+#filename<-"21947420_data_upbuilt_filtered_upbuilt.csv" #good will be off but shoudl be good? 
+#filename<-"21998595_data_upbuilt_filtered_upbuilt.csv" #good ratio is good 
+#filename<-"22021425_data_upbuilt_filtered_upbuilt.csv" #good ratio is good
+#filename<-"22267201_data_upbuilt_filtered_upbuilt.csv" #good #very good 
+#filename<-"22504420_data_upbuilt_filtered_upbuilt.csv" #good #not working
+#filename<-"23118974_data_upbuilt_filtered_upbuilt.csv" #mostly not sigfnicant
+#filename<-"23263486_data_upbuilt_filtered_upbuilt.csv" #kinda good
+#filename<-"23669352_data_upbuilt_filtered_upbuilt.csv" #idk
+#filename<-"23658558_data_upbuilt_filtered_upbuilt.csv" #hm
+#filename<-"24430505_data_upbuilt_filtered_upbuilt.csv" #hm idk
+#filename<-"24952745_data_upbuilt_filtered_upbuilt.csv" #accetable 
+#filename<-"25035420_data_upbuilt_filtered_upbuilt.csv" #straight
+#filename<-"22267201_data_upbuilt_filtered_upbuilt.csv"
+data<-read.csv(filename, sep=" ")
 
 #find test statsitic 
 results.data<-data.frame(data$beta.disc, data$se.disc)
 results.data$s1<-(data$beta.disc)/(data$se.disc)
 results.data$s2<-(data$beta.rep)/(data$se.rep)
+
+checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
+  geom_point()+
+  scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
+
+checkingDist
 
 z_score <- qnorm(0.025,lower.tail =FALSE)
 
@@ -33,8 +57,8 @@ threshold=data$p.thresh[1]
 
 # sampleSizeS1=data$n.disc
 # sampleSizeS2=data$n.rep
-sampleSizeS1=1*sqrt(scalingFactor)
-sampleSizeS2=(data$n.rep/data$n.disc)*sqrt(scalingFactor)
+sampleSizeS1=1*scalingFactor
+sampleSizeS2=(mean(data$n.rep)/mean(data$n.disc))*scalingFactor
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
@@ -59,9 +83,12 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   p <- s1
   for (i in 1:NROW(s1)){
     if (s1[i]>0){
+     #p[i]<-(1-mean(pnorm(z_score, mean[i], sqrt(var2))))
       p[i]<-(1-pnorm(z_score, mean[i], sqrt(var2)))
+      
     }
     else{
+     # p[i]<-mean(pnorm(-z_score, mean[i], sqrt(var2)))
       p[i]<-pnorm(-z_score, mean[i], sqrt(var2))
     }
   }
