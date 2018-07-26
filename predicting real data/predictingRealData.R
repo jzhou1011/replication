@@ -2,12 +2,12 @@
 
 
 #reading in libraries
-library(tidyverse)
-library(MASS)
-library(ggplot2)
-library(dplyr)
-library(plyr)
-library(reshape2)
+# library(tidyverse)
+# library(MASS)
+# library(ggplot2)
+# library(dplyr)
+# library(plyr)
+# library(reshape2)
 
 
 #read in file 
@@ -23,7 +23,7 @@ library(reshape2)
 #filename<-"./files/1_21738478_data_upbuilt_filtered_upbuilt.csv" #good #13 vs 31.5
 #filename<-"./files/1_21909110_data_upbuilt_filtered_upbuilt.csv" #good but large variance #11 vs 23.78
 #filename<-"./files/2_21909110_data_upbuilt_filtered_upbuilt.csv" #good #23 vs 30.82
-filename<-"./files/1_24952745_data_upbuilt_filtered_upbuilt.csv" #accetable 
+#filename<-"./files/1_24952745_data_upbuilt_filtered_upbuilt.csv" #accetable 
 
 #filename<-"25282103_data_upbuilt_filtered_upbuilt.csv" #good 
 #filename<-"21909110_data_upbuilt_filtered_upbuilt.csv" #good ratio and not is the same and its ok
@@ -40,6 +40,10 @@ filename<-"./files/1_24952745_data_upbuilt_filtered_upbuilt.csv" #accetable
 
 #filename<-"25035420_data_upbuilt_filtered_upbuilt.csv" #straight
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv"
+
+args = commandArgs(trailingOnly=TRUE)
+filename<-args[1]
+
 data<-read.csv(filename, sep=",")
 
 #find test statsitic 
@@ -47,11 +51,12 @@ results.data<-data.frame(data$beta.disc, data$se.disc)
 results.data$s1<-(data$beta.disc)/(data$se.disc)
 results.data$s2<-(data$beta.rep)/(data$se.rep)
 
-checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
-  geom_point()+
-  scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
-
-checkingDist
+#checking distribution
+# checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
+#   geom_point()+
+#   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
+# 
+# checkingDist
 
 z_score <- qnorm(0.025,lower.tail =FALSE)
 
@@ -116,3 +121,8 @@ obs_rep_cnt <- sum(results.data$actual_rep)
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
+
+obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="fg")
+prd_rep_cnt_f <- formatC(prd_rep_cnt, width = 4, format="fg")
+results <- paste(as.character(obs_rep_cnt_f),as.character(prd_rep_cnt_f)," ",sep=" ")
+cat(results)

@@ -1,14 +1,12 @@
 #predicting whether s2 replicates given s1. Different Sample Size 
 
-library(tidyverse)
-library(MASS)
-library(ggplot2)
-library(dplyr)
-library(plyr)
-library(reshape2)
+#library(tidyverse)
+#library(dplyr)
+
 
 #reading in data
-filename<-"1_24952745_data_upbuilt_filtered_upbuilt.csv"
+args = commandArgs(trailingOnly=TRUE)
+filename<-args[1]
 data<-read.csv(filename, sep=",")
 
 
@@ -33,8 +31,9 @@ temp<-temp/(sqrt(averages1+averages2))
 act_var<-var(temp)
 
 #act_var<-act_var/(sqrt(averages2+averages1))
-
-
+act_var_f <- formatC(act_var, width = 4, format="fg")
+results <- paste(as.character(act_var_f),'\n',sep=" ")
+cat(results)
 #eskins way 
 
 
