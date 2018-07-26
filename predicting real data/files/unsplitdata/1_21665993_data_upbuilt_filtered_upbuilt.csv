@@ -1,0 +1,3 @@
+"","beta.disc","se.disc","n.disc","f.disc","beta.rep","se.rep","n.rep","f.rep","trait.mean","p.thresh","rsid","chr","pos","trait.var","file.tag"
+"1",-0.1272,0.0253,4289,0.157227792,0.131,0.034,2142,0.23,0,1e-06,"rs2275525",1,11109619,1.23266,"21665993_data_upbuilt_filtered.csv"
+"2",0.1674,0.0339,4289,0.231273024,-0.086,0.033,2142,0.26,0,1e-06,"rs17084051",4,54221414,1.23266,"21665993_data_upbuilt_filtered.csv"

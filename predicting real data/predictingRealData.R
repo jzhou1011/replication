@@ -123,6 +123,8 @@ results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sam
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
 
 obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="fg")
+if (obs_rep_cnt== 0)
+  obs_rep_cnt_f <- "   0"
 prd_rep_cnt_f <- formatC(prd_rep_cnt, width = 4, format="fg")
 results <- paste(as.character(obs_rep_cnt_f),as.character(prd_rep_cnt_f)," ",sep=" ")
 cat(results)
