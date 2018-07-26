@@ -41,6 +41,8 @@
 #filename<-"25035420_data_upbuilt_filtered_upbuilt.csv" #straight
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv"
 
+#filename<-"./files/1_19820697_data_upbuilt_filtered_upbuilt.csv"
+
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
 
@@ -121,10 +123,8 @@ obs_rep_cnt <- sum(results.data$actual_rep)
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
-
-obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="fg")
-if (obs_rep_cnt== 0)
-  obs_rep_cnt_f <- "   0"
+m_f <- formatC(M, width = 4, format="d")
+obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="d")
 prd_rep_cnt_f <- formatC(prd_rep_cnt, width = 4, format="fg")
-results <- paste(as.character(obs_rep_cnt_f),as.character(prd_rep_cnt_f)," ",sep=" ")
+results <- paste(as.character(m_f),as.character(obs_rep_cnt_f),as.character(prd_rep_cnt_f)," ",sep=" ")
 cat(results)

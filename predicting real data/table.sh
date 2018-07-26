@@ -4,7 +4,7 @@
 IFS=$'\n' read -d '' -r -a lines < ./input.txt
 length=${#lines[@]}
 echo ${length}
-echo "filename    obs  pred  var" > output.txt
+echo "filename      M   obs  pred  var" > output.txt
 
 counter=0
 while [ $counter -lt $length ]
