@@ -17,3 +17,5 @@ do
 	Rscript isVar1.R "${lines[$counter]}" >> output.txt
 	((counter++))
 done
+
+cat output.txt | tr -s " " > output2.txt

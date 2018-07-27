@@ -60,8 +60,6 @@ results.data$s2<-(data$beta.rep)/(data$se.rep)
 # 
 # checkingDist
 
-z_score <- qnorm(0.025,lower.tail =FALSE)
-
 
 #needed functions and math
 M=nrow(data)
@@ -69,6 +67,8 @@ var=data$trait.var[1]
 #sampleSize
 sigma=sqrt(var)
 threshold=data$p.thresh[1]
+z_score_nom <- qnorm(0.05,lower.tail = FALSE)
+z_score <- qnorm(0.05/M,lower.tail =FALSE)
 
 # sampleSizeS1=data$n.disc
 # sampleSizeS2=data$n.rep
@@ -77,7 +77,11 @@ sampleSizeS2=mean(data$n.rep)
 results.data$actual_rep = rep(0,M)
 
 for (i in 1:M){
-  if (results.data$s2[i]>z_score | results.data$s2[i]<(-z_score))
+  # if (results.data$s2[i]>z_score | results.data$s2[i]<(-z_score))
+  #   results.data$actual_rep[i] = 1
+  if (results.data$s2[i]>z_score_nom && results.data$s1[i]>0)
+    results.data$actual_rep[i] = 1
+  if (results.data$s1[i]< 0 && results.data$s2[i]<(-z_score_nom))
     results.data$actual_rep[i] = 1
 }
 #calculating condtional with different sample sizes.
