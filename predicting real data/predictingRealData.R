@@ -114,6 +114,14 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   return(p)
 }
 
+calculate_upperCI<-function(s1,sampleS1, sampleS2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+  var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
+  error <- qnorm(0.975)*sqrt(var2)/sqrt(nrow(s1))
+  mean+error
+}
 
 #observed replication rate 
 # s1_sig<-nrow(filter(results.data, s1>zScore|s1<(-zScore)))
