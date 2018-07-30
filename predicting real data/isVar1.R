@@ -5,11 +5,11 @@
 
 #read in data
 #filename<-"./files/1_25282103_data_upbuilt_filtered_upbuilt.csv" #good 
-#filename<-"./files/3_23118974_data_upbuilt_filtered_upbuilt.csv"
+filename<-"./files/3_23118974_data_upbuilt_filtered_upbuilt.csv"
 
 #reading in data through command line 
-args = commandArgs(trailingOnly=TRUE)
-filename<-args[1]
+#args = commandArgs(trailingOnly=TRUE)
+#filename<-args[1]
 data<-read.csv(filename, sep=",")
 
 
@@ -36,5 +36,4 @@ act_var_f <- formatC(act_var, width = 4, format="fg")
 results <- paste(as.character(act_var_f),'\n',sep="")
 cat(results)
 #eskins way 
-
 
