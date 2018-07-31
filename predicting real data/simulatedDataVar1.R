@@ -61,11 +61,19 @@ results.data<-data.frame(s1_dist, s2_dist1)
 # temp1_c<-temp1/(sqrt(N_1+N_2))
 # act_var_c<-var(temp1)
 
+
+variance <- function(x) {
+  n <- length(x)
+  #m <- mean(x)
+  m<-0
+  (1/(n - 1)) * sum((x - m)^2)
+}
+
 #calcualting variance for only signifcant s1 
 tempData<-filter(results.data, s1_dist>5.2)
 temp1<-((tempData$s1_dist)*(sqrt(N_2)))-((tempData$s2_dist1)*(sqrt(N_1)))
 temp1<-temp1/(sqrt(N_1+N_2))
-act_var<-var(temp1)
+act_var<-variance(temp1)
 
 #checking winners curse 
 s1_s2<-ggplot(data = tempData, mapping = aes(x = s1_dist, y = s2_dist1,colour="blue")) +geom_point()
