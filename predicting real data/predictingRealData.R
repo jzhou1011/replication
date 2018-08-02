@@ -17,7 +17,7 @@
 #filename<-"./files/4_19820697_data_upbuilt_filtered_upbuilt.csv" #average #5 vs 12.96
 #filename<-"./files/5_19820697_data_upbuilt_filtered_upbuilt.csv" #all sig #3 vs 2.997
 #filename<-"./files/1_19343178_data_upbuilt_filtered_upbuilt.csv" #good #6 vs 21.16
-filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 24.31 
+#filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 24.31 
 #filename<-"./files/1_20010834_data_upbuilt_filtered_upbuilt.csv" #okay #6 vs 29.06
 #filename<-"./files/1_20887962_data_upbuilt_filtered_upbuilt.csv" #straight
 #filename<-"./files/1_21738478_data_upbuilt_filtered_upbuilt.csv" #good #13 vs 31.5
@@ -43,8 +43,8 @@ filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 
 
 #filename<-"./files/1_19820697_data_upbuilt_filtered_upbuilt.csv"
 
-#args = commandArgs(trailingOnly=TRUE)
-#filename<-args[1]
+args = commandArgs(trailingOnly=TRUE)
+filename<-args[1]
 
 data<-read.csv(filename, sep=",")
 
@@ -54,11 +54,11 @@ results.data$s1<-(data$beta.disc)/(data$se.disc)
 results.data$s2<-(data$beta.rep)/(data$se.rep)
 
 #checking distribution
-checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
-  geom_point()+
-  scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
-
-checkingDist
+# checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
+#   geom_point()+
+#   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))
+# 
+# checkingDist
 
 
 #needed functions and math
