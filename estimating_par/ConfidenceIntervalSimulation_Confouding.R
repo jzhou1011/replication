@@ -8,22 +8,22 @@ library(reshape2)
 
 
 #simulating data 
-var_g<-1.0
-var_c1<-0
+var_g<-.2
+var_c1<-1
 var_c2<-0
 sigma<-sqrt(var_g)
 sigma_c1<-sqrt(var_c1) #first study
 sigma_c2<-sqrt(var_c2) #second study 
-M<-32#number of snps
+M<-1000#number of snps
 #pValue<-0.05/M
 #pValue<-(1*10^(-4))
 ZScore<- qnorm(0.05/M,lower.tail =FALSE)
 #ZScore<-5.2
-sampleSizeS1<-1000
-sampleSizeS2<-400
+sampleSizeS1<-100
+sampleSizeS2<-50
 
 #generating lambda
-lambda <- rnorm(n=M, mean=0, sd=sigma_g)
+lambda <- rnorm(n=M, mean=0, sd=sigma)
 #generating C1
 delta1 <- rnorm(n=M, mean=0, sd=sigma_c1)
 #simulating C2
