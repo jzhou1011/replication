@@ -18,4 +18,4 @@ do
 	((counter++))
 done
 
-#cat output.txt | tr -s " " > output2.txt
+cat MLEoutput.txt | tr -s " " > MLEoutput2.txt
