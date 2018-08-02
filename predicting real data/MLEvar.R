@@ -1,9 +1,9 @@
 #MLE sigmasqaured 
 
-filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 24.31 
+#filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv" #average #6 vs 24.31 
 
-#args = commandArgs(trailingOnly=TRUE)
-#filename<-args[1]
+args = commandArgs(trailingOnly=TRUE)
+filename<-args[1]
 data<-read.csv(filename, sep=",")
 
 
@@ -30,7 +30,7 @@ MLE<-function(var){
 }
 
 max<-0
-maxVar<-0
+maxVar<-0;
 # for(i in seq(from=1, to=traitVar, by=.01)){
 #   temp<-MLE(i)
 #   if (temp>max) {
@@ -50,5 +50,6 @@ for(i in seq(from=1, to=100, by=.001)){
 #formating 
 maxVar<-formatC(maxVar, width = 4, format="f")
 max<-formatC(max, width = 4, format="f")
-results <- paste(as.character(maxVar),as.character(max),"\n",sep=" ")
+#results <- paste(as.character(maxVar),as.character(max),"\n",sep=" ")
+results <- paste(as.character(maxVar),"\n",sep="")
 cat(results)

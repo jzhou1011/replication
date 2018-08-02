@@ -33,6 +33,6 @@ act_var<-var(temp)/(averages1+averages2)
 
 #act_var<-act_var/(sqrt(averages2+averages1))
 act_var_f <- formatC(act_var, width = 4, format="fg")
-results <- paste(as.character(act_var_f),'\n',sep="")
+results <-as.character(act_var_f)
 cat(results)
 
