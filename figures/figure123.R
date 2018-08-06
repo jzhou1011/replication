@@ -68,10 +68,10 @@ ggsave(filename="figure1.jpg")
 s1VSs2_4<-ggplot() +
   geom_point(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x=s1, y = s2, color = "Significant"))+
   geom_point(data = filter(results.data, s1<5.2 & s1>(-5.2)), mapping = aes(x=s1, y = s2, color="Not Significant"))+
-  geom_hline(yintercept=4, linetype="dashed", color = "black")+
+  geom_hline(yintercept=5.2, linetype="dashed", color = "black")+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+
   scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+
-  geom_hline(yintercept=-4, linetype="dashed", color = "black")+
+  geom_hline(yintercept=-5.2, linetype="dashed", color = "black")+
   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
@@ -82,17 +82,15 @@ ggsave(filename="figure2.jpg")
 figure3<-ggplot() +
   geom_point(data = filter(results.data, s1>5.2 | s1<(-5.2)), mapping = aes(x=s1, y = s2, color = "Significant"))+
   geom_point(data = filter(results.data, s1<5.2 & s1>(-5.2)), mapping = aes(x=s1, y = s2, color="Not Significant"))+
-  # geom_hline(yintercept=4, linetype="dashed", color = "black")+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+
-  scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+
-  #geom_hline(yintercept=-4, linetype="dashed", color = "black")+
+  scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+
   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
   stat_function(fun=calculate_mean, aes(color="Mean"))+
   stat_function(fun=calculate_lowerCI, linetype = 2, aes(color="Lower CI"))+
   stat_function(fun=calculate_upperCI,linetype = 2, aes(color="Upper CI"))+
-  stat_function(fun=true_lambda,linetype = 2, aes(color="Actual Sample Size"))+
+  stat_function(fun=true_lambda,linetype = 2, aes(color="Actual Effect Size"))+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
-                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Actual Sample Size"="black"))
+                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Actual Effect Size"="gray"))
 figure3
 ggsave(filename="figure3.jpg")
