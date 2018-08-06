@@ -88,9 +88,9 @@ figure3<-ggplot() +
   stat_function(fun=calculate_mean, aes(color="Mean"))+
   stat_function(fun=calculate_lowerCI, linetype = 2, aes(color="Lower CI"))+
   stat_function(fun=calculate_upperCI,linetype = 2, aes(color="Upper CI"))+
-  stat_function(fun=true_lambda,linetype = 2, aes(color="Actual Effect Size"))+
+  stat_function(fun=true_lambda,linetype = 2, aes(color="Equal statistics"))+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
-                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Actual Effect Size"="gray"))
+                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Equal statistics"="gray"))
 figure3
 ggsave(filename="figure3.jpg")
