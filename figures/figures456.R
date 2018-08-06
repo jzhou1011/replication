@@ -114,10 +114,10 @@ figure6<-ggplot() +
   stat_function(fun=calculate_mean, aes(color="Mean"), args=list(c1=var_c1, c2=var_c2))+
   stat_function(fun=calculate_lowerCI, linetype = 2, aes(color="Lower CI"),args=list(c1=var_c1, c2=var_c2))+
   stat_function(fun=calculate_upperCI,linetype = 2, aes(color="Upper CI"),args=list(c1=var_c1, c2=var_c2))+
-  stat_function(fun=true_lambda,linetype = 2, aes(color="Actual Effect Size"))+
+  stat_function(fun=true_lambda,linetype = 2, aes(color="Equal statistics"))+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
-                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Actual Effect Size"="gray"))
+                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3", "Mean"="black", "Upper CI"="red", "Lower CI"="red","Equal statistics"="gray"))
 figure6
 ggsave(filename="figure6.jpg")
 
