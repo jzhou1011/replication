@@ -17,11 +17,22 @@ for(i in 1:N){
   results[i,c(2,3)] <- rnorm(n=2,mean=lamda[i],sd=1)
 }
 results.data=as.data.frame(results)
-colnames(results.data)=c("lamda", "s1", "s2")
+colnames(results.data)=c("lamda", "Discovery_Sample_Statistics", "Replication_Sample_Statistics")
 
-s1VSs2_4<-ggplot(data = filter(results.data, s1>4 | s1<(-4)), mapping = aes(x = s1, y = s2)) +
-  geom_point()+geom_hline(yintercept=4, linetype="dashed", color = "red")+
+s1VSs2_4<-ggplot() +
+  geom_point(data = filter(results.data, Discovery_Sample_Statistics>4 | Discovery_Sample_Statistics<(-4)), mapping = aes(x=Discovery_Sample_Statistics, y = Replication_Sample_Statistics, color = "Significant"))+
+  geom_point(data = filter(results.data, Discovery_Sample_Statistics<4 & Discovery_Sample_Statistics>(-4)), mapping = aes(x=Discovery_Sample_Statistics, y = Replication_Sample_Statistics, color="Not Significant"))+
+  geom_hline(yintercept=4, linetype="dashed", color = "black")+
   scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+
-  geom_hline(yintercept=-4, linetype="dashed", color = "red")
+  geom_hline(yintercept=-4, linetype="dashed", color = "black")+
+  xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
+  theme(legend.position = "right")+
+  scale_color_manual(name = element_blank(), # or name = element_blank()
+                     values = c("Not Significant"="slategray1", "Significant"="dodgerblue3"))
+s1VSs2_4
 
-ggsave(filename="s1_s2_replication_4.jpg")
+#color="dodgerblue3"
+
+ggsave(filename="Figure2.jpg")
+
+
