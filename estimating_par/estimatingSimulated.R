@@ -2,8 +2,8 @@ library(tidyverse)
 library(dplyr)
 
 
-var_g<-2
-var_c1<-1
+var_g<-3
+var_c1<-3
 var_c2<-0
 M<-1000
 N_1<-3
@@ -36,7 +36,6 @@ MLE<-function(var){
   estimate<-estimate*(pnorm(zscore1, mean=0, sd=sqrt(var)))^(M-num_s1)
 }
 
-
 max<-0
 maxVar<-0
 
@@ -50,4 +49,15 @@ for(i in seq(from=1, to=50, by=.001)){
 }
 
 #sigma_g
+#sigma_g <- mean(s1_sig$s2_dist/s1_sig$s1_dist)*maxVar/sqrt(N_1*N_2)
 sigma_g <- mean(s1_sig$s2_dist)/mean(s1_sig$s1_dist)*maxVar/sqrt(N_1*N_2)
+
+
+#estimating c1
+c1_est<-(maxVar-1-sigma_g*(N_1))/(N_1)
+#estimating c2
+#this is not accuraute and we must fine another way to do this. 
+var_1<-((s1_sig$s1_dist)*(sqrt(N_2)))-(s1_sig$s2_dist*(sqrt(N_1)))
+var_1<-var(var_1)/(N_1+N_2)
+
+expected<-(N_2*(1+N_1*var_c1)+N_1*(1+N_2*var_c2))/(N_1+N_2)

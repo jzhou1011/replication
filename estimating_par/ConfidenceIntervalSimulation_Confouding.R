@@ -8,13 +8,13 @@ library(reshape2)
 
 
 #simulating data 
-var_g<-.2
-var_c1<-1
+var_g<-.01
+var_c1<-0.001
 var_c2<-0
 sigma<-sqrt(var_g)
 sigma_c1<-sqrt(var_c1) #first study
 sigma_c2<-sqrt(var_c2) #second study 
-M<-1000#number of snps
+M<-13#number of snps
 #pValue<-0.05/M
 #pValue<-(1*10^(-4))
 ZScore<- qnorm(0.05/M,lower.tail =FALSE)
