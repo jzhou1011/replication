@@ -12,7 +12,7 @@ var_c1<-2*.25
 var_c2<-2*.25
 sigma_g<-sqrt(var_g)
 sigma_c1<-sqrt(var_c1) #first study
-sigma_c2<-sqrt(var_c2) #second study 
+sigma_c2<-sqrt(var_c2) #second study
 M<-100000
 
 #generating lambda

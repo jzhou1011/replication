@@ -3,14 +3,14 @@ library(dplyr)
 
 
 var_g<-3
-var_c1<-3
+var_c1<-2
 var_c2<-0
 M<-1000
-N_1<-3
-N_2<-2
+N_1<-2
+N_2<-3
 zscore1<-qnorm(0.05/M,lower.tail = FALSE)
 
-lambda <- rnorm(n=M, mean=0, sd=sqrt(var_g))
+lambda<-rnorm(n=M, mean=0, sd=sqrt(var_g))
 s1_dist<-as.vector(matrix(nrow=M, ncol=1))
 s2_dist<-as.vector(matrix(nrow=M, ncol=1))
 delta1<-rnorm(n=M, mean=0, sd=sqrt(var_c1))
@@ -50,14 +50,32 @@ for(i in seq(from=1, to=50, by=.001)){
 
 #sigma_g
 #sigma_g <- mean(s1_sig$s2_dist/s1_sig$s1_dist)*maxVar/sqrt(N_1*N_2)
-sigma_g <- mean(s1_sig$s2_dist)/mean(s1_sig$s1_dist)*maxVar/sqrt(N_1*N_2)
+sigma_g_sq <- mean(s1_sig$s2_dist)/mean(s1_sig$s1_dist)*maxVar/sqrt(N_1*N_2)
 
 
-#estimating c1
-c1_est<-(maxVar-1-sigma_g*(N_1))/(N_1)
+#first method to estimate c1
+c1_est<-(maxVar-1-sigma_g_sq*(N_1))/(N_1)
 #estimating c2
 #this is not accuraute and we must fine another way to do this. 
 var_1<-((s1_sig$s1_dist)*(sqrt(N_2)))-(s1_sig$s2_dist*(sqrt(N_1)))
 var_1<-var(var_1)/(N_1+N_2)
 
 expected<-(N_2*(1+N_1*var_c1)+N_1*(1+N_2*var_c2))/(N_1+N_2)
+
+#second method to estimate c1
+expected_mean_ratio<-function(c1){
+  sqrt(N_1*N_2)*sigma_g_sq/(1+N_1*sigma_g_sq+N_1*c1)
+}
+estimate_c1 <- 0
+min_rms <- 10000
+min_c1 <- 0
+for (i in 1:10000){
+  ratio<-expected_mean_ratio(estimate_c1)
+  expected_s2 <- s1_sig$s1_dist*ratio
+  cur_rms <- sqrt(sum((expected_s2-s1_sig$s2_dist)^2))
+  if (cur_rms < min_rms){
+    min_rms<- cur_rms
+    min_c1 <- estimate_c1
+  }
+  estimate_c1 <- estimate_c1+0.001
+}
