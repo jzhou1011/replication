@@ -1,8 +1,8 @@
-# library(tidyverse)
-# library(dplyr)
-# #install.packages("mvtnorm")
-# library(mvtnorm)
-# 
+library(tidyverse)
+library(dplyr)
+#install.packages("mvtnorm")
+library(mvtnorm)
+
 
 var_g<-2
 var_c1<-2
@@ -109,7 +109,8 @@ MLE_joint_probability<-function(var_g, var_c1, var_c2){
   
   estimate<-choose(M,num_s1)
   
-  vector<-(s1_sig %>% select(s1_dist, s2_dist))
+  #vector<-(s1_sig %>% select(s1_dist, s2_dist))
+  vector<-(s1_sig[,c(2,3)])
   prob<-dmvnorm(x=vector, mean = mean_matrix, sigma = cov_matrix, log = FALSE)
   
   for(i in prob){
