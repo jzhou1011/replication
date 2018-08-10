@@ -22,7 +22,7 @@ M<-1000#number of snps
 ZScore<- qnorm(0.05/M,lower.tail =FALSE)
 #ZScore<-5.2
 sampleSizeS1<-100
-sampleSizeS2<-100
+sampleSizeS2<-50
 
 #generating lambda
 lambda <- rnorm(n=M, mean=0, sd=sigma)
@@ -49,62 +49,60 @@ colnames(data1)=c("lambda", "delta1", "delta2", "s1", "s2")
 data1$s1_2<-(data1$s1)/sqrt(sampleSizeS1)
 data1$s2_2<-(data1$s2)/sqrt(sampleSizeS2)
 s1_sig<-data1 %>% filter(s1_2>ZScore | s1_2<(-ZScore))
+data1<-data1 %>% filter(s1_2>ZScore | s1_2<(-ZScore))
 
-
-calculate_upperCI<-function(s1,sampleS1, sampleS2, var_g, c1, c2){
-  sd_S1<-sqrt(sampleS1*var_g+1+c1*sampleS1)
-  sd_S2<-sqrt(sampleS2*var_g+1+c2*sampleS2)
-  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
-  var2<-sd_S2^2-((sampleS1*sampleS2*var_g^2)/(sd_S1^2))
+calculate_upperCI<-function(s1,sampleS1, sampleS2, c1, c2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1+c1*sampleS1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1+c2*sampleS2)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+  var2<-sd_S2^2-((sampleS1*sampleS2*sigma^4)/(sd_S1^2))
   error <- qnorm(0.975)*sqrt(var2)
   mean+error
 }
 
-calculate_lowerCI<-function(s1,sampleS1, sampleS2, var_g, c1, c2){
-  sd_S1<-sqrt(sampleS1*var_g+1+c1*sampleS1)
-  sd_S2<-sqrt(sampleS2*var_g+1+c2*sampleS2)
-  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
-  var2<-sd_S2^2-((sampleS1*sampleS2*var_g^2)/(sd_S1^2))
+calculate_lowerCI<-function(s1,sampleS1, sampleS2, c1, c2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1+c1*sampleS1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1+c2*sampleS2)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+  var2<-sd_S2^2-((sampleS1*sampleS2*sigma^4)/(sd_S1^2))
   error <- qnorm(0.975)*sqrt(var2)
   return(mean-error)
 }
 
-calculate_mean<-function(s1,sampleS1,sampleS2, var_g, c1, c2){
-  sd_S1<-sqrt(sampleS1*var_g+1+c1*sampleS1)
-  sd_S2<-sqrt(sampleS2*var_g+1+c2*sampleS2)
-  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
+calculate_mean<-function(s1,sampleS1,sampleS2, c1, c2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1+c1*sampleS1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1+c2*sampleS2)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
 }
 
 
+
 pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
   geom_point(mapping =aes(color="Test Statistics"))+
-  stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g, c1=var_c1, c2=var_c2),linetype = 2, color="red")+
-  stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g, c1=var_c1, c2=var_c2),linetype = 2, mapping =aes(color="Confidence Interval"))+
-  stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g, c1=var_c1, c2=var_c2), mapping=aes(color="Mean"))+
+  stat_function(fun=calculate_lowerCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=var_c1, c2=var_c2),linetype = 2, color="red")+
+  stat_function(fun=calculate_upperCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=var_c1, c2=var_c2),linetype = 2, mapping =aes(color="Confidence Interval"))+
+  stat_function(fun=calculate_mean, args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=var_c1, c2=var_c2), mapping=aes(color="Mean"))+
   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
 pred_obs
 
-
-
-ggsave(filename ="sim_confInterval_confouding.jpg")
+ggsave(filename ="sim_confInterval_confouding2.jpg")
 
 
 pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
   geom_point(mapping =aes(color="Test Statistics"))+
-  stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g, c1=0, c2=0),linetype = 2, color="red")+
-  stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g, c1=0, c2=0),linetype = 2, mapping =aes(color="Confidence Interval"))+
-  stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g, c1=0, c2=0), mapping=aes(color="Mean"))+
+  stat_function(fun=calculate_lowerCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=0, c2=0),linetype = 2, color="red")+
+  stat_function(fun=calculate_upperCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=0, c2=0),linetype = 2, mapping =aes(color="Confidence Interval"))+
+  stat_function(fun=calculate_mean, args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=0, c2=0), mapping=aes(color="Mean"))+
   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
 pred_obs
 
-
-ggsave(filename ="sim_confInterval_withoutconfouding.jpg")
+ggsave(filename ="sim_confInterval_withoutconfouding2.jpg")
 
 
 
@@ -194,18 +192,19 @@ for(i in seq(from=0,to=10, by=0.001)){
 
 pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
   geom_point(mapping =aes(color="Test Statistics"))+
-  stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, color="red")+
-  stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, mapping =aes(color="Confidence Interval"))+
-  stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g_est2, c1=c1_est2, c2=c2_est), mapping=aes(color="Mean"))+
+  stat_function(fun=calculate_lowerCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est),linetype = 2, color="red")+
+  stat_function(fun=calculate_upperCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est),linetype = 2, mapping =aes(color="Confidence Interval"))+
+  stat_function(fun=calculate_mean, args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est), mapping=aes(color="Mean"))+
   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
   theme(legend.position = "right")+
   scale_color_manual(name = element_blank(), # or name = element_blank()
                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
 pred_obs
 
-ggsave(filename ="sim_confInterval_confoudingEST.jpg")
+ggsave(filename ="sim_confInterval_confoudingEST2.jpg")
 
 
+#calculating s2 given s1
 #calculating s2 given s1
 calculate_pcondtional<-function(s1, var_g, var_c1, var_c2){
   mean<-(sqrt(N_1*N_2)*var_g*s1)/(1+N_1*var_g+N_1*var_c1)
@@ -215,19 +214,21 @@ calculate_pcondtional<-function(s1, var_g, var_c1, var_c2){
   return(p)
 }
 
+
 #rep rate 
 #s1_sig<-nrow(filter(data, s1>5.2|s1<(-5.2)))
 ZScore_2<-qnorm(0.05,lower.tail =FALSE)
 s1_s2_sig<-s1_sig %>% filter(s2_2>ZScore_2 | s2_2<(-ZScore_2))
-repRate=nrow(s1_s2_sig)/nrow(s1_sig)
+repRate=nrow(s1_s2_sig)/M
 
 #theoretical reprate
-theo_rep <- sum(calculate_pcondtional(s1_sig$s1, var_g_1, c1_est2, c2_est))/nrow(s1_sig)
+theo_rep <- sum(calculate_pcondtional(s1_sig$s1, var_g_1, c1_est2, c2_est))/M
 
 #rep rate = 0.0506
 #tho=0.05
 #c1 est 1.219
 #c2 est 1.078
 #trait var est 2.89
+
 
 
