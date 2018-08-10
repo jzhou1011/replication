@@ -1,5 +1,5 @@
 #libraries
-install.packages("mvtnorm")
+#install.packages("mvtnorm")
 library(mvtnorm)
 library(tidyverse)
 library(MASS)
@@ -180,7 +180,39 @@ for(i in seq(from=0,to=10, by=0.001)){
   }
 }
 
+pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
+  geom_point()+
+  stat_function(fun=calculate_lowerCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est), color="paleturquoise2")+
+  stat_function(fun=calculate_upperCI,args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est), color="paleturquoise2")+
+  stat_function(fun=calculate_mean, args=list(sampleS1<-sampleSizeS1, sampleS2<-sampleSizeS2, c1=c1_est2, c2=c2_est), color="palevioletred1")
+pred_obs
 
+ggsave(filename ="sim_confInterval_confoudingEST.jpg")
+
+
+#calculating s2 given s1
+calculate_pcondtional<-function(s1, var_g, var_c1, var_c2){
+  mean<-(sqrt(N_1*N_2)*var_g*s1)/(1+N_1*var_g+N_1*var_c1)
+  #var<-(1-(sigma_g^4)/((1+sigma_g^2+sigma_c1^2)*(1+sigma_g^2+sigma_c2^2)))*(1+sigma_g^2+sigma_c2^2)
+  var<-(N_2*var_g)+(N_2*var_c2)+1-((N_1*N_2*var_g^2)/(N_1*var_g+N_1*var_c1+1))
+  p<- (1-pnorm(5.2, mean, sqrt(var)))+pnorm(-5.2, mean, sqrt(var))
+  return(p)
+}
+
+#rep rate 
+#s1_sig<-nrow(filter(data, s1>5.2|s1<(-5.2)))
+ZScore_2<-qnorm(0.05,lower.tail =FALSE)
+s1_s2_sig<-s1_sig %>% filter(s2_2>ZScore_2 | s2_2<(-ZScore_2))
+repRate=nrow(s1_s2_sig)/M
+
+#theoretical reprate
+theo_rep <- sum(calculate_pcondtional(s1_sig$s1, var_g_1, c1_est2, c2_est))/M
+
+#rep rate = 0.0506
+#tho=0.05
+#c1 est 1.219
+#c2 est 1.078
+#trait var est 2.89
 
 
 
