@@ -206,28 +206,48 @@ pred_obs
 ggsave(filename ="sim_confInterval_confoudingEST.jpg")
 
 
+
 #calculating s2 given s1
+ZScore_2<-qnorm(0.05/nrow(s1_sig),lower.tail =FALSE)
 calculate_pcondtional<-function(s1, var_g, var_c1, var_c2){
   mean<-(sqrt(N_1*N_2)*var_g*s1)/(1+N_1*var_g+N_1*var_c1)
   #var<-(1-(sigma_g^4)/((1+sigma_g^2+sigma_c1^2)*(1+sigma_g^2+sigma_c2^2)))*(1+sigma_g^2+sigma_c2^2)
   var<-(N_2*var_g)+(N_2*var_c2)+1-((N_1*N_2*var_g^2)/(N_1*var_g+N_1*var_c1+1))
-  p<- (1-pnorm(5.2, mean, sqrt(var)))+pnorm(-5.2, mean, sqrt(var))
-  return(p)
+  p <- s1
+  for (i in 1:NROW(s1)){
+    if (s1[i]>0){
+      p[i]<-(1-pnorm(ZScore_2*sqrt(N_2), mean[i], sqrt(var)))
+    }
+    else{
+      p[i]<-pnorm(-ZScore_2*sqrt(N_2), mean[i], sqrt(var))
+    }
+  }
+  return (p)
+}
+
+calculate_pcondtional_mean<-function(s1, var_g, var_c1, var_c2){
+  mean<-(sqrt(N_1*N_2)*var_g*s1)/(1+N_1*var_g+N_1*var_c1)
+  #var<-(1-(sigma_g^4)/((1+sigma_g^2+sigma_c1^2)*(1+sigma_g^2+sigma_c2^2)))*(1+sigma_g^2+sigma_c2^2)
+  var<-(N_2*var_g)+(N_2*var_c2)+1-((N_1*N_2*var_g^2)/(N_1*var_g+N_1*var_c1+1))
+  return (mean)
+}
+
+calculate_pcondtional_var<-function(s1, var_g, var_c1, var_c2){
+  mean<-(sqrt(N_1*N_2)*var_g*s1)/(1+N_1*var_g+N_1*var_c1)
+  #var<-(1-(sigma_g^4)/((1+sigma_g^2+sigma_c1^2)*(1+sigma_g^2+sigma_c2^2)))*(1+sigma_g^2+sigma_c2^2)
+  var<-(N_2*var_g)+(N_2*var_c2)+1-((N_1*N_2*var_g^2)/(N_1*var_g+N_1*var_c1+1))
+  return (var)
 }
 
 #rep rate 
 #s1_sig<-nrow(filter(data, s1>5.2|s1<(-5.2)))
-ZScore_2<-qnorm(0.05,lower.tail =FALSE)
 s1_s2_sig<-s1_sig %>% filter(s2_2>ZScore_2 | s2_2<(-ZScore_2))
 repRate=nrow(s1_s2_sig)/nrow(s1_sig)
 
 #theoretical reprate
-theo_rep <- sum(calculate_pcondtional(s1_sig$s1, var_g_1, c1_est2, c2_est))/nrow(s1_sig)
-
-#rep rate = 0.0506
-#tho=0.05
-#c1 est 1.219
-#c2 est 1.078
-#trait var est 2.89
-
-
+theo_rep <- sum(calculate_pcondtional(s1_sig$s1, var_g_est2, c1_est2, c2_est))/nrow(s1_sig)
+try.temp <- cbind(s1_sig$s1_2,s1_sig$s2_2,
+                  calculate_pcondtional(s1_sig$s1, var_g_est2, c1_est2, c2_est),
+                  calculate_pcondtional_mean(s1_sig$s1, var_g_est2, c1_est2, c2_est),
+                  calculate_pcondtional_var(s1_sig$s1, var_g_est2, c1_est2, c2_est))
+colnames(try.temp)<-c("s1_2","s2_2","prob","pred_mean","pred_var")
