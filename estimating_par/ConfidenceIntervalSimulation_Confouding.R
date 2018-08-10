@@ -49,7 +49,7 @@ colnames(data1)=c("lambda", "delta1", "delta2", "s1", "s2")
 data1$s1_2<-(data1$s1)/sqrt(sampleSizeS1)
 data1$s2_2<-(data1$s2)/sqrt(sampleSizeS2)
 s1_sig<-data1 %>% filter(s1_2>ZScore | s1_2<(-ZScore))
-
+#data1<-data1 %>% filter(s1_2>ZScore | s1_2<(-ZScore))
 
 calculate_upperCI<-function(s1,sampleS1, sampleS2, var_g, c1, c2){
   sd_S1<-sqrt(sampleS1*var_g+1+c1*sampleS1)
@@ -89,7 +89,7 @@ pred_obs
 
 
 
-ggsave(filename ="sim_confInterval_confouding.jpg")
+ggsave(filename ="sim_confInterval_confouding2.jpg")
 
 
 pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
@@ -104,7 +104,7 @@ pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
 pred_obs
 
 
-ggsave(filename ="sim_confInterval_withoutconfouding.jpg")
+ggsave(filename ="sim_confInterval_withoutconfouding2.jpg")
 
 
 
@@ -203,7 +203,7 @@ pred_obs<-ggplot(data = data1, mapping = aes(x = s1, y = s2)) +
                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
 pred_obs
 
-ggsave(filename ="sim_confInterval_confoudingEST.jpg")
+ggsave(filename ="sim_confInterval_confoudingEST2.jpg")
 
 
 
