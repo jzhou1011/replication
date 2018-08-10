@@ -1,4 +1,6 @@
 #libraries
+install.packages("mvtnorm")
+library(mvtnorm)
 library(tidyverse)
 library(MASS)
 library(ggplot2)
@@ -94,13 +96,11 @@ ggsave(filename ="sim_confInterval_withoutconfouding.jpg")
 
 
 
-
-
 #estimating confouding and heriability from data 
 #s1 variance
 N_1<-sampleSizeS1
 N_2<-sampleSizeS2
-num_s1<-sum(data1$s1_2>ZScore |data1$s1_2<(-ZScore) )
+num_s1<-sum(data1$s1_2>ZScore|data1$s1_2<(-ZScore))
 
 
 MLE<-function(var){
@@ -108,12 +108,12 @@ MLE<-function(var){
   for(i in s1_sig$s1){
     estimate<-estimate*dnorm(i, mean=0, sd=sqrt(var))
   }
-  estimate<-estimate*(pnorm(ZScore, mean=0, sd=sqrt(var)))^(M-num_s1)
+  estimate<-estimate*(pnorm(ZScore*sqrt(sampleSizeS1), mean=0, sd=sqrt(var))-pnorm((-ZScore)*sqrt(sampleSizeS1), mean=0, sd=sqrt(var)))^(M-num_s1)
 }
 max<-0
 maxVar<-0
 
-for(i in seq(from=0.1, to=1000, by=.1)){
+for(i in seq(from=0.1, to=10*sampleSizeS1, by=.1)){
   temp<-MLE(i)
   #print(temp)
   if (temp>max) {
@@ -138,11 +138,14 @@ for (i in 1:10000){
     min_rms<- cur_rms
     var_g_est2 <- sigma_g_estimator
   }
-  sigma_g_estimator <- sigma_g_estimator+0.001
+  sigma_g_estimator <- sigma_g_estimator+0.01
 }
 
+#another var_g estimator
+var_g_1 <- mean(s1_sig$s2/s1_sig$s1)*maxVar/sqrt(sampleSizeS1*sampleSizeS2)
+
 #est c1
-c1_est2<-(maxVar-1-var_g_est2*(N_1))/(N_1)
+c1_est2<-(maxVar-1-var_g_1*(N_1))/(N_1)
 
 #estimating sigmac2
 MLE_joint_probability<-function(var_g, var_c1, var_c2){
@@ -164,19 +167,19 @@ MLE_joint_probability<-function(var_g, var_c1, var_c2){
   for(i in prob){
     estimate<-estimate*i
   }
-  estimate*pnorm(ZScore, mean=0, sd=sqrt(var_g))^(M-num_s1)
-  
+  return(estimate)
 }
 
 max<-0
 c2_est<-0
 for(i in seq(from=0,to=10, by=0.001)){
-  temp<-MLE_joint_probability(var_g_est2, c1_est2, i)
+  temp<-MLE_joint_probability(var_g_1, c1_est2, i)
   if(temp>max){
     max<-temp
     c2_est<-i
   }
 }
+
 
 
 
