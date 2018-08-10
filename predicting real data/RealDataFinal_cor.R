@@ -11,7 +11,7 @@ library(tidyverse)
 # library(reshape2)
 
 #read in file 
-#filename<-"./files/1_19557161_data_upbuilt_filtered_upbuilt.csv"
+#filename<-"./files/1_25282103_data_upbuilt_filtered_upbuilt.csv"
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
 data<-read.csv(filename, sep=",")
@@ -102,7 +102,7 @@ MLE_joint_probability<-function(var_g, var_c1, var_c2){
 
 max<-0
 c2_est<-0
-for(i in seq(from=0,to=100, by=0.001)){
+for(i in seq(from=0,to=50, by=0.0002)){
   temp<-MLE_joint_probability(var_g_est2, c1_est2, i)
   if(temp>max){
     max<-temp
@@ -194,6 +194,7 @@ var_c1_f <- formatC(c1_est2, width = 4, format="fg")
 var_c2_f <- formatC(c2_est, width = 4, format="fg")
 
 results <- paste(as.character(prd_rep_cnt_f),as.character(var_g_f),
-                 as.character(var_c1_f),as.character(var_c2_f),'\n',sep=" ")
+                 as.character(var_c1_f),as.character(var_c2_f),sep=" ")
+results <- paste(results,"\n")
 cat(results)
 
