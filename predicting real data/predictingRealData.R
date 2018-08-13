@@ -42,6 +42,7 @@
 #filename<-"22267201_data_upbuilt_filtered_upbuilt.csv"
 
 #filename<-"./files/1_19820697_data_upbuilt_filtered_upbuilt.csv"
+#filename<-"./files/1_23669352_data_upbuilt_filtered_upbuilt.csv"
 
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
@@ -120,6 +121,19 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
   return(p)
 }
 
+calculate_pcondtional_var<-function(s1,sampleS1, sampleS2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+  var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
+}
+
+calculate_pcondtional_mean<-function(s1,sampleS1, sampleS2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+}
+
 calculate_pcondtional_nom<-function(s1,sampleS1, sampleS2){
   sd_S1<-sqrt(sampleS1*sigma^2+1)
   sd_S2<-sqrt(sampleS2*sigma^2+1)
@@ -139,6 +153,44 @@ calculate_pcondtional_nom<-function(s1,sampleS1, sampleS2){
   }
   return(p)
 }
+
+calculate_upperCI<-function(s1,sampleS1, sampleS2, var_g){
+  sd_S1<-sqrt(sampleS1*var_g+1)
+  sd_S2<-sqrt(sampleS2*var_g+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
+  var2<-sd_S2^2-((sampleS1*sampleS2*var_g^2)/(sd_S1^2))
+  error <- qnorm(0.975)*sqrt(var2)
+  mean+error
+}
+
+calculate_lowerCI<-function(s1,sampleS1, sampleS2, var_g){
+  sd_S1<-sqrt(sampleS1*var_g+1)
+  sd_S2<-sqrt(sampleS2*var_g+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
+  var2<-sd_S2^2-((sampleS1*sampleS2*var_g^2)/(sd_S1^2))
+  error <- qnorm(0.975)*sqrt(var2)
+  return(mean-error)
+}
+
+calculate_mean<-function(s1,sampleS1,sampleS2, var_g){
+  sd_S1<-sqrt(sampleS1*var_g+1)
+  sd_S2<-sqrt(sampleS2*var_g+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*var_g*s1)/(sd_S1^2)
+}
+
+# pred_obs<-ggplot(data = results.data, mapping = aes(x = s1, y = s2)) +
+#   geom_point(mapping =aes(color="Test Statistics"))+
+#   stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var),linetype = 2, color="red")+
+#   stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var),linetype = 2, mapping =aes(color="Confidence Interval"))+
+#   stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var), mapping=aes(color="Mean"))+
+#   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
+#   ylim(-10,10)+
+#   theme(legend.position = "right")+
+#   scale_color_manual(name = element_blank(), # or name = element_blank()
+#                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
+# pred_obs
+# 
+# ggsave(filename ="CI_wo_c.jpg")
 
 #predicing repication using the ratio 
 # calculate_pcondtional_ratio<-function(s1,sampleS1, sampleS2,ratio){
@@ -176,6 +228,12 @@ obs_rep_cnt_nom <- sum(results.data$actual_rep_nom)
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
 prd_rep_cnt_nom<-sum(calculate_pcondtional_nom(results.data$s1,sampleSizeS1, sampleSizeS2))
+try.temp <- as.data.frame(cbind(results.data$s1,results.data$s2,
+                                calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2),
+                                calculate_pcondtional_mean(results.data$s1, sampleSizeS1,sampleSizeS2),
+                                calculate_pcondtional_var(results.data$s1, sampleSizeS1,sampleSizeS2)))
+colnames(try.temp)<-c("s1","s2","prob","pred_mean","pred_var")
+
 m_f <- formatC(M, width = 4, format="d")
 obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="d")
 obs_rep_cnt_nom_f <- formatC(obs_rep_cnt_nom, width = 4, format="d")

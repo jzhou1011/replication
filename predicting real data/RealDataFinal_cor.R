@@ -11,7 +11,7 @@ library(tidyverse)
 # library(reshape2)
 
 #read in file 
-#filename<-"./files/2_21909110_data_upbuilt_filtered_upbuilt.csv"
+#filename<-"./files/1_23669352_data_upbuilt_filtered_upbuilt.csv"
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
 data<-read.csv(filename, sep=",")
@@ -138,12 +138,13 @@ calculate_mean<-function(s1,sampleS1,sampleS2, var_g, c1, c2){
 }
 
 
-# checkingDist<-ggplot(data = filter(results.data), mapping = aes(x = s1, y = s2)) +
+# checkingDist<-ggplot(data = results.data, mapping = aes(x = s1, y = s2)) +
 #   geom_point()+
 #   #scale_y_continuous(breaks=seq(-8, 8, 1), limits=c(-8,8))+scale_x_continuous(breaks=seq(-8, 8, 1), limits=c(-8, 8))+
 #   stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, color="red")+
 #   stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, mapping =aes(color="Confidence Interval"))+
-#   stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g_est2, c1=c1_est2, c2=c2_est), mapping=aes(color="Mean"))
+#   stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g_est2, c1=c1_est2, c2=c2_est), mapping=aes(color="Mean"))+
+#   xlab("Discovery study statistics")+ylab("Replication study statistics")
 # 
 # checkingDist
 
@@ -195,6 +196,19 @@ calculate_pcondtional_var<-function(s1, var_g, var_c1, var_c2){
 }
 
 theo_rep <- sum(calculate_pcondtional(results.data$s1, var_g_est2, c1_est2, c2_est))/nrow(results.data)
+
+# pred_obs<-ggplot(data = results.data, mapping = aes(x = s1, y = s2)) +
+#   geom_point(mapping =aes(color="Test Statistics"))+
+#   stat_function(fun=calculate_lowerCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, color="red")+
+#   stat_function(fun=calculate_upperCI,args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2,var_g=var_g_est2, c1=c1_est2, c2=c2_est),linetype = 2, mapping =aes(color="Confidence Interval"))+
+#   stat_function(fun=calculate_mean, args=list(sampleS1=sampleSizeS1, sampleS2=sampleSizeS2, var_g=var_g_est2, c1=c1_est2, c2=c2_est), mapping=aes(color="Mean"))+
+#   xlab("Discovery Sample Statistics")+ylab("Replication Sample Statistics")+
+#   ylim(-10,10)+
+#   theme(legend.position = "right")+
+#   scale_color_manual(name = element_blank(), # or name = element_blank()
+#                      values = c("Confidence Interval"="red", "Test Statistics"="dodgerblue3", "Mean"="black"))
+# pred_obs
+# ggsave("CI_wc.jpg")
 
 s1_s2_sig<-results.data %>% filter(s2>ZScore_2 | s2<(-ZScore_2))
 repRate=nrow(s1_s2_sig)/nrow(results.data)

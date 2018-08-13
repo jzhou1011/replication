@@ -19,4 +19,4 @@ do
 	((counter++))
 done
 
-cat output.txt | tr -s " " > output2_high.txt
+cat output_high.txt | tr -s " " > output2_high.txt
