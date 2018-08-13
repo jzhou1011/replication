@@ -1,10 +1,10 @@
 #!/bin/bash
 
 
-IFS=$'\n' read -d '' -r -a lines < ./input_high.txt
+IFS=$'\n' read -d '' -r -a lines < ./input.txt
 length=${#lines[@]}
 echo ${length}
-echo "filename      M   obs  pred_wc   pred_c   var_g   var_c1  var_c2 " > output.txt
+echo "filename     M   obs   obs_nom pred_wc pred_wc_n pred_c pred_c_n var_g var_c1 var_c2" > output.txt
 
 counter=0
 while [ $counter -lt $length ]

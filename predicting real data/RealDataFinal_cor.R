@@ -11,7 +11,7 @@ library(tidyverse)
 # library(reshape2)
 
 #read in file 
-#filename<-"./files/1_25282103_data_upbuilt_filtered_upbuilt.csv"
+#filename<-"./files/2_21909110_data_upbuilt_filtered_upbuilt.csv"
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
 data<-read.csv(filename, sep=",")
@@ -26,6 +26,7 @@ ZScore<-qnorm(thresh,lower.tail =FALSE) #Zscore they used in orignal study s1.
 M<-0.05/thresh
 MSig<-nrow(data)
 traitVar<-data$trait.var[1]
+z_score_nom <- qnorm(0.05,lower.tail = FALSE)
 
 # sampleSizeS1=data$n.disc
 # sampleSizeS2=data$n.rep
@@ -102,7 +103,7 @@ MLE_joint_probability<-function(var_g, var_c1, var_c2){
 
 max<-0
 c2_est<-0
-for(i in seq(from=0,to=50, by=0.0002)){
+for(i in seq(from=0,to=50, by=0.002)){
   temp<-MLE_joint_probability(var_g_est2, c1_est2, i)
   if(temp>max){
     max<-temp
@@ -165,6 +166,22 @@ calculate_pcondtional<-function(s1, var_g, var_c1, var_c2){
   return (p)
 }
 
+calculate_pcondtional_nom<-function(s1, var_g, var_c1, var_c2){
+  mean<-(var_g*s1)/(1/N_1+var_g+var_c1)
+  var<-var_g+var_c2+1/N_2-((var_g^2)/(var_g+var_c1+1/N_1))
+  #var<-var/N_2
+  p <- s1
+  for (i in 1:NROW(s1)){
+    if (s1[i]>0){
+      p[i]<-(1.0-pnorm(z_score_nom, mean[i], sqrt(var)))
+    }
+    else{
+      p[i]<-pnorm(-z_score_nom, mean[i], sqrt(var))
+    }
+  }
+  return (p)
+}
+
 calculate_pcondtional_mean<-function(s1, var_g, var_c1, var_c2){
   mean<-(var_g*s1)/(1/N_1+var_g+var_c1)
   var<-var_g+var_c2+1/N_2-((var_g^2)/(var_g+var_c1+1/N_1))
@@ -181,20 +198,21 @@ theo_rep <- sum(calculate_pcondtional(results.data$s1, var_g_est2, c1_est2, c2_e
 
 s1_s2_sig<-results.data %>% filter(s2>ZScore_2 | s2<(-ZScore_2))
 repRate=nrow(s1_s2_sig)/nrow(results.data)
-try.temp <- cbind(results.data$s1,results.data$s2,
+try.temp <- as.data.frame(cbind(results.data$s1,results.data$s2,
                   calculate_pcondtional(results.data$s1, var_g_est2, c1_est2, c2_est),
                   calculate_pcondtional_mean(results.data$s1, var_g_est2, c1_est2, c2_est),
-                  calculate_pcondtional_var(results.data$s1, var_g_est2, c1_est2, c2_est))
+                  calculate_pcondtional_var(results.data$s1, var_g_est2, c1_est2, c2_est)))
 colnames(try.temp)<-c("s1","s2","prob","pred_mean","pred_var")
 
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1, var_g_est2, c1_est2, c2_est))
 prd_rep_cnt_f <- formatC(prd_rep_cnt, width = 4, format="fg")
+prd_rep_cnt_nom <- sum(calculate_pcondtional_nom(results.data$s1, var_g_est2, c1_est2, c2_est))
+prd_rep_cnt_nom_f <- formatC(prd_rep_cnt_nom, width = 4, format="fg")
 var_g_f <- formatC(var_g_est2, width = 4, format="fg")
 var_c1_f <- formatC(c1_est2, width = 4, format="fg")
 var_c2_f <- formatC(c2_est, width = 4, format="fg")
 
-results <- paste(as.character(prd_rep_cnt_f),as.character(var_g_f),
-                 as.character(var_c1_f),as.character(var_c2_f),sep=" ")
+results <- paste(as.character(prd_rep_cnt_f),as.character(prd_rep_cnt_nom_f),as.character(var_g_f),
+                 as.character(var_c1_f),as.character(var_c2_f),sep="  ")
 results <- paste(results,"\n")
 cat(results)
-

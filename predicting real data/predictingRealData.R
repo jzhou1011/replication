@@ -75,14 +75,20 @@ z_score <- qnorm(0.05/M,lower.tail =FALSE)
 sampleSizeS1<-mean(data$n.disc)
 sampleSizeS2<-mean(data$n.rep)
 results.data$actual_rep = rep(0,M)
+results.data$actual_rep_nom = rep(0,M)
 
 for (i in 1:M){
   # if (results.data$s2[i]>z_score | results.data$s2[i]<(-z_score))
   #   results.data$actual_rep[i] = 1
   if (results.data$s2[i]>z_score_nom && results.data$s1[i]>0)
-    results.data$actual_rep[i] = 1
+    results.data$actual_rep_nom[i] = 1
   if (results.data$s1[i]< 0 && results.data$s2[i]<(-z_score_nom))
+    results.data$actual_rep_nom[i] = 1
+  if (results.data$s2[i]>z_score && results.data$s1[i]>0)
     results.data$actual_rep[i] = 1
+  if (results.data$s1[i]< 0 && results.data$s2[i]<(-z_score))
+    results.data$actual_rep[i] = 1
+  
 }
 #calculating condtional with different sample sizes.
 #this one is assuming same sample size
@@ -109,6 +115,26 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
     else{
      # p[i]<-mean(pnorm(-z_score, mean[i], sqrt(var2)))
       p[i]<-pnorm(-z_score, mean[i], sqrt(var2))
+    }
+  }
+  return(p)
+}
+
+calculate_pcondtional_nom<-function(s1,sampleS1, sampleS2){
+  sd_S1<-sqrt(sampleS1*sigma^2+1)
+  sd_S2<-sqrt(sampleS2*sigma^2+1)
+  mean<-(sqrt(sampleS1)*sqrt(sampleS2)*sigma^2*s1)/(sd_S1^2)
+  var2<-1+((sampleS2*sigma^2)/(sd_S1)^2)
+  p <- s1
+  for (i in 1:NROW(s1)){
+    if (s1[i]>0){
+      #p[i]<-(1-mean(pnorm(z_score, mean[i], sqrt(var2))))
+      p[i]<-(1-pnorm(z_score_nom, mean[i], sqrt(var2)))
+      
+    }
+    else{
+      # p[i]<-mean(pnorm(-z_score, mean[i], sqrt(var2)))
+      p[i]<-pnorm(-z_score_nom, mean[i], sqrt(var2))
     }
   }
   return(p)
@@ -142,16 +168,21 @@ calculate_pcondtional<-function(s1,sampleS1, sampleS2){
 
 #observed rep count
 obs_rep_cnt <- sum(results.data$actual_rep)
+obs_rep_cnt_nom <- sum(results.data$actual_rep_nom)
 
 
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector, sampleSizeS1, sampleSizeS2))/N
 #theo_rep2 <- sum(calculate_pcondtional(s1_sig_vector,sampleSizeS1, sampleSizeS2))/N
 results.data$pred_prob = calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2)
 prd_rep_cnt <- sum(calculate_pcondtional(results.data$s1,sampleSizeS1, sampleSizeS2))
+prd_rep_cnt_nom<-sum(calculate_pcondtional_nom(results.data$s1,sampleSizeS1, sampleSizeS2))
 m_f <- formatC(M, width = 4, format="d")
 obs_rep_cnt_f <- formatC(obs_rep_cnt, width = 4, format="d")
+obs_rep_cnt_nom_f <- formatC(obs_rep_cnt_nom, width = 4, format="d")
 prd_rep_cnt_f <- formatC(prd_rep_cnt, width = 4, format="fg")
-results <- paste(as.character(m_f),as.character(obs_rep_cnt_f),as.character(prd_rep_cnt_f)," ",sep=" ")
+prd_rep_cnt_nom_f <- formatC(prd_rep_cnt_nom, width = 4, format="fg")
+results <- paste(as.character(m_f),as.character(obs_rep_cnt_f),as.character(obs_rep_cnt_nom_f),
+                 as.character(prd_rep_cnt_f),as.character(prd_rep_cnt_nom_f)," ",sep="  ")
 cat(results)
 
 #using adjusted mean for ratio
