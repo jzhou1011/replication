@@ -37,16 +37,17 @@ N_2<-sampleSizeS2
 
 #estimating variance of s1
 MLE<-function(var){
-  estimate<-choose(M,MSig)
+  estimate<-1
   for(i in results.data$s1){
-    estimate<-estimate*dnorm(i, mean=0, sd=sqrt(var))
+    estimate<-estimate*dnorm(i, mean=0, sd=sqrt(var))^(1/20)
   }
-  estimate<-estimate*(pnorm(ZScore*sqrt(sampleSizeS1), mean=0, sd=sqrt(var))-pnorm((-ZScore)*sqrt(sampleSizeS1), mean=0, sd=sqrt(var)))^(M-MSig)
+  #estimate<-estimate*(pnorm(ZScore*sqrt(sampleSizeS1), mean=0, sd=sqrt(var))-pnorm((-ZScore)*sqrt(sampleSizeS1), mean=0, sd=sqrt(var)))^(M-MSig)
+  estimate<-estimate*(pnorm(ZScore, mean=0, sd=sqrt(var))-pnorm((-ZScore), mean=0, sd=sqrt(var)))^((M-MSig)/20)
 }
 
 max<-0
 maxVar<-0
-for(i in seq(from=0.1, to=1000, by=.1)){
+for(i in seq(from=0.1, to=20, by=.01)){
   temp<-MLE(i)
   #print(temp)
   if (temp>max) {
@@ -90,20 +91,20 @@ MLE_joint_probability<-function(var_g, var_c1, var_c2){
   mean_matrix[1,1]=0
   mean_matrix[2,1]=0
   
-  estimate<-choose(M,MSig)
+  estimate<-1
   
   vector<-(results.data[,c(3,4)])
   prob<-dmvnorm(x=vector, mean = mean_matrix, sigma = cov_matrix, log = FALSE)
   
   for(i in prob){
-    estimate<-estimate*i
+    estimate<-estimate*(i^(1/50))
   }
   return(estimate)
 }
 
 max<-0
 c2_est<-0
-for(i in seq(from=0,to=50, by=0.002)){
+for(i in seq(from=0,to=100, by=0.01)){
   temp<-MLE_joint_probability(var_g_est2, c1_est2, i)
   if(temp>max){
     max<-temp
