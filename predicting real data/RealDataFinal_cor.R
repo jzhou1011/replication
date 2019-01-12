@@ -11,7 +11,7 @@ library(tidyverse)
 # library(reshape2)
 
 #read in file 
-#filename<-"./files/1_23669352_data_upbuilt_filtered_upbuilt.csv"
+#filename<-"./files/1_18846228_data_upbuilt_filtered_upbuilt.csv"
 args = commandArgs(trailingOnly=TRUE)
 filename<-args[1]
 data<-read.csv(filename, sep=",")
