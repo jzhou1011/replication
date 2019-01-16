@@ -7,7 +7,7 @@ library(dplyr)
 library(plyr)
 library(reshape2)
 
-filename<-"output2.txt"
+filename<-"output2_high.txt"
 
 data<-read.csv(filename, sep=" ")
 #data<-data[, c(-9)]
@@ -29,3 +29,10 @@ sum(data$pred_c_n)
 sum(data$obs)
 sum(data$pred_wc)
 sum(data$pred_c)
+
+ggplot(data = data, mapping=aes(x=pred_c,y=obs))+geom_point()+
+  xlab("Predicted rep count with confounding and winners curse")+
+  ylab("Observed rep count")
+ggplot(data = data, mapping=aes(x=pred_wc,y=obs))+geom_point()+
+  xlab("Predicted rep count with winners curse")+
+  ylab("Observed rep count")
