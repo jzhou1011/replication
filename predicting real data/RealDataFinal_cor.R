@@ -78,6 +78,11 @@ for (i in 1:10000){
 #estimating c2
 c1_est2<-maxVar-1/N_1-var_g_est2
 
+if(c1_est2<0){
+  c1_est2<-0
+  var_g_est2<-maxVar-1/N_1
+}
+
 
 #estimating sigmac2
 MLE_joint_probability<-function(var_g, var_c1, var_c2){

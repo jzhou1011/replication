@@ -108,6 +108,11 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
   
   c1_est2<-(maxVar-1-var_g_est2*(N_1))/(N_1)
   
+  if(c1_est2<0){
+    c1_est2<-0
+    var_g_est2<-(maxVar-1)/(N_1)
+  }
+  
   max<-0
   c2_est<-0
   for(i in seq(from=0,to=10, by=0.001)){
@@ -127,4 +132,4 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
   return (c(nrow(s1_s2_sig),predRepRate,var_g_est2,c1_est2,c2_est,(maxVar-1)/N_1,predRepRateWC))
 }
 
-actualAndPredCnt(1,1,3)
+actualAndPredCnt(1,0,0)
