@@ -4,8 +4,8 @@ library(dplyr)
 library(mvtnorm)
 
 M<-1000
-N_1<-2
-N_2<-3
+N_1<-10000
+N_2<-5000
 zscore1<-qnorm(0.025/M,lower.tail = FALSE)
 
 MLE<-function(var,s1_sig,num_s1){
@@ -80,7 +80,7 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
   max<-0
   maxVar<-0
   
-  for(i in seq(from=0.001, to=50, by=.001)){
+  for(i in seq(from=0.01, to=100, by=.01)){
     temp<-MLE(i,s1_sig,num_s1)
     #print(temp)
     if (temp>max) {
@@ -103,7 +103,7 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
       min_rms<- cur_rms
       var_g_est2 <- sigma_g_estimator
     }
-    sigma_g_estimator <- sigma_g_estimator+0.001
+    sigma_g_estimator <- sigma_g_estimator+0.00001
   }
   
   c1_est2<-(maxVar-1-var_g_est2*(N_1))/(N_1)
@@ -115,7 +115,7 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
   
   max<-0
   c2_est<-0
-  for(i in seq(from=0,to=10, by=0.001)){
+  for(i in seq(from=0,to=0.01, by=0.00001)){
     temp<-MLE_joint_probability(var_g_est2, c1_est2, i,N_1,N_2,s1_sig,num_s1)
     if(temp>max){
       max<-temp
@@ -129,7 +129,7 @@ actualAndPredCnt<-function(var_g,var_c1,var_c2){
   probsWC <- calculate_pcondtional(s1_sig$s1_dist,(maxVar-1)/N_1,0,0,zscore2)
   predRepRateWC <- sum(probsWC)
   
-  return (c(nrow(s1_s2_sig),predRepRate,var_g_est2,c1_est2,c2_est,(maxVar-1)/N_1,predRepRateWC))
+  return (c(nrow(s1_s2_sig),var_g_est2,c1_est2,c2_est,predRepRate,(maxVar-1)/N_1,predRepRateWC))
 }
 
-actualAndPredCnt(1,0,0)
+actualAndPredCnt(0.001,0,0)
